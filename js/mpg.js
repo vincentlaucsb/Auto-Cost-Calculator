@@ -69,8 +69,11 @@ var Graph = function (_React$Component2) {
             for (var i in data) {
                 var cost = [data[i].name];
 
+                // Cost of car at miles[j] miles
+                // parseFloat() needed to avoid string errors
                 for (var j in miles) {
-                    cost.push(miles[j] * 1000 / data[i].mpg * this.props.ppg);
+                    console.log(data);
+                    cost.push(parseFloat(data[i].price) + miles[j] * 1000 / parseFloat(data[i].mpg) * parseFloat(this.props.ppg));
                 }
 
                 temp.columns.push(cost);
@@ -96,7 +99,7 @@ var Graph = function (_React$Component2) {
 function CarListing(props) {
     return React.createElement(
         'li',
-        null,
+        { className: 'list-group-item' },
         props.car.name,
         React.createElement(
             'a',
@@ -125,7 +128,7 @@ var CarList = function (_React$Component3) {
                 null,
                 React.createElement(
                     'ul',
-                    null,
+                    { className: 'list-group' },
                     this.props.data.map(function (i) {
                         return React.createElement(CarListing, { car: i, onClick: _this4.props.removeCar.bind(_this4, i.name) });
                     })
@@ -195,11 +198,13 @@ var CarAdder = function (_React$Component5) {
     function CarAdder(props) {
         _classCallCheck(this, CarAdder);
 
+        // Default values for new cars
         var _this6 = _possibleConstructorReturn(this, (CarAdder.__proto__ || Object.getPrototypeOf(CarAdder)).call(this, props));
 
         _this6.state = {
             'name': null,
-            'mpg': null
+            'mpg': null,
+            'price': 0
         };
 
         _this6.handleChange = _this6.handleChange.bind(_this6);
@@ -250,6 +255,16 @@ var CarAdder = function (_React$Component5) {
                             null,
                             'Name',
                             React.createElement('input', { className: 'form-control', name: 'Name', id: 'name', onChange: this.handleChange })
+                        )
+                    ),
+                    React.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        React.createElement(
+                            'label',
+                            null,
+                            'Price',
+                            React.createElement('input', { className: 'form-control', name: 'Price', id: 'price', onChange: this.handleChange })
                         )
                     ),
                     React.createElement(
@@ -324,10 +339,7 @@ var MpgCalculator = function (_React$Component6) {
             // Add car listing        
 
             var temp = this.state.data;
-            temp.push({
-                'name': data.name,
-                'mpg': data.mpg
-            });
+            temp.push(data);
 
             this.setState({
                 data: temp
@@ -354,7 +366,7 @@ var MpgCalculator = function (_React$Component6) {
         value: function render() {
             return React.createElement(
                 'div',
-                null,
+                { className: 'container-fluid' },
                 React.createElement(
                     'div',
                     { className: 'row' },
@@ -381,10 +393,12 @@ var MpgCalculator = function (_React$Component6) {
 
 var cars = [{
     'name': 'Car 1',
-    'mpg': 40
+    'mpg': 40,
+    'price': 0
 }, {
     'name': 'Car 2',
-    'mpg': 15
+    'mpg': 15,
+    'price': 0
 }];
 
 ReactDOM.render(React.createElement(MpgCalculator, { data: cars }), document.getElementById('root'));

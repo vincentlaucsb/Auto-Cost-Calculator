@@ -41,8 +41,14 @@ class Graph extends React.Component {
                 data[i].name
             ];
             
+            // Cost of car at miles[j] miles
+            // parseFloat() needed to avoid string errors
             for (var j in miles) {
-                cost.push((miles[j] * 1000)/data[i].mpg * this.props.ppg);
+                console.log(data);
+                cost.push(
+                    parseFloat(data[i].price) +
+                    ((miles[j] * 1000)/parseFloat(data[i].mpg) * parseFloat(this.props.ppg))
+                );
             }
             
             temp.columns.push(cost);
@@ -60,7 +66,7 @@ class Graph extends React.Component {
 }
 
 function CarListing(props) {
-    return (<li>
+    return (<li className="list-group-item">
     {props.car.name} 
     <a onClick={props.onClick}>[Remove]</a>
     </li>);
@@ -69,7 +75,7 @@ function CarListing(props) {
 class CarList extends React.Component {
     render() {
         return <div>
-            <ul>
+            <ul className="list-group">
             { this.props.data.map((i) => <CarListing car={i} onClick={this.props.removeCar.bind(this, i.name)} />)}
             </ul>
         </div>
@@ -118,9 +124,12 @@ class TextInput extends React.Component {
 class CarAdder extends React.Component {
     constructor(props) {
         super(props);
+        
+        // Default values for new cars
         this.state = {
             'name': null,
-            'mpg': null
+            'mpg': null,
+            'price': 0
         };
         
         this.handleChange = this.handleChange.bind(this);
@@ -152,6 +161,11 @@ class CarAdder extends React.Component {
                 <div className="form-group">
                     <label>Name
                         <input className="form-control" name="Name" id="name" onChange={this.handleChange} />
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>Price
+                        <input className="form-control" name="Price" id="price" onChange={this.handleChange} />
                     </label>
                 </div>
                 <div className="form-group">
@@ -202,10 +216,7 @@ class MpgCalculator extends React.Component {
         // Add car listing        
         
         var temp = this.state.data;
-        temp.push({
-            'name': data.name,
-            'mpg': data.mpg
-        });
+        temp.push(data);
         
         this.setState({
             data: temp
@@ -228,7 +239,7 @@ class MpgCalculator extends React.Component {
     }
     
     render() {
-        return <div>
+        return <div className="container-fluid">
             <div className="row">
                 <Graph data={this.state.data} ppg={this.state.ppg} />
                 <div className="col">
@@ -245,11 +256,13 @@ class MpgCalculator extends React.Component {
 var cars = [
     {
         'name': 'Car 1',
-        'mpg': 40
+        'mpg': 40,
+        'price': 0
     },
     {
         'name': 'Car 2',
-        'mpg': 15
+        'mpg': 15,
+        'price': 0
     }
 ];
 
