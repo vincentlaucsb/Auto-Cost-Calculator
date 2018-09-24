@@ -1,6 +1,32 @@
 var miles = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
 
+class GraphGenerator extends React.Component {
+    render() {
+        c3.generate({
+            bindto: '#chart',
+            data: this.props.data,
+            axis: {
+                x: {
+                    label: 'Miles Driven'
+                },
+                y: {
+                    label: 'Cost'                    
+                }
+            }
+        });
+        
+        return null;
+    }
+}
+
 class Graph extends React.Component {
+    componentDidMount() {
+        // Force a render() call which will allow chart to show up
+        // Without this, react will call c3.generate() before #chart has been created,
+        // meaning that there is no HTML dom element to bind graph to, so it won't show.
+        this.setState({});
+    }
+    
     makeData(data) {
         // Process car data and generate cost of ownership
         var temp = {
@@ -26,20 +52,10 @@ class Graph extends React.Component {
     }
     
     render() {
-        c3.generate({
-            bindto: '#chart',
-            data: this.makeData(this.props.data),
-            axis: {
-                x: {
-                    label: 'Miles Driven'
-                },
-                y: {
-                    label: 'Cost'                    
-                }
-            }
-        });
-        
-        return null;
+        return <div className="col">
+            <div id="chart"></div>
+            <GraphGenerator renderNow={this.props.mounted} data={this.makeData(this.props.data)} />
+        </div>
     }
 }
 
@@ -131,11 +147,19 @@ class CarAdder extends React.Component {
     
     render() {
         return <div>
-            <h2>Add a Car</h2>
+            <h3>Add a Vehicle</h3>
             <form onSubmit={this.handleSubmit}>
-                <input name="Name" id="name" onChange={this.handleChange} />
-                <input type="number" name="MPG" id="mpg" onChange={this.handleChange} />
-                <input type="submit" value="Submit" />
+                <div className="form-group">
+                    <label>Name
+                        <input className="form-control" name="Name" id="name" onChange={this.handleChange} />
+                    </label>
+                </div>
+                <div className="form-group">
+                    <label>MPG
+                        <input className="form-control" type="number" name="MPG" id="mpg" onChange={this.handleChange} />
+                    </label>
+                </div>
+                <button type="submit" className="btn btn-primary">Add</button>
             </form>
         </div>
     }
@@ -205,9 +229,14 @@ class MpgCalculator extends React.Component {
     
     render() {
         return <div>
-            <Graph data={this.state.data} ppg={this.state.ppg} />
-            <CarList data={this.state.data} removeCar={this.removeCar} />
-            <CarAdder addCar={this.addCar} />
+            <div className="row">
+                <Graph data={this.state.data} ppg={this.state.ppg} />
+                <div className="col">
+                    <h2>Vehicles</h2>
+                    <CarList data={this.state.data} removeCar={this.removeCar} />
+                    <CarAdder addCar={this.addCar} />
+                </div>
+            </div>
             <GasPrice ppg={this.state.ppg} onChange={this.updateGasPrice} />
         </div>
     }
