@@ -1,3 +1,6 @@
+# IDE Crap
+.vs/
+
 # Logs
 logs
 *.log
