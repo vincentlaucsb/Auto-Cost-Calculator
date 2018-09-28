@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as Helpers from "./helpers";
 import { FuelType, FuelPrice, FuelBadge, GasPriceChanger } from "./Fuel";
-import { MileageChanger } from "./Mileage";
-import { MonthChanger } from "./GraphControls";
+import { MileageChanger, MonthChanger } from "./GraphControls";
 declare var c3: any;
 declare var d3: any;
 
@@ -96,7 +95,7 @@ interface CarListingProps {
 
 function CarListing(props: CarListingProps) {
     return (
-        <li>
+        <li className="list-group-item">
         {props.data.name} 
         <FuelBadge fuel={props.data.fuelType} /> 
         <button type="button" className="btn btn-danger btn-sm" onClick={props.removeCar}>x</button>
@@ -111,10 +110,13 @@ interface CarListProps {
 
 class CarList extends React.Component<CarListProps> {
     render() {
-        return <div>
-            <ul>
-            { this.props.data.map((i) => <CarListing data={i} removeCar={this.props.removeCar.bind(this, i.name)} />)}
-            </ul>
+        return <div className="card">
+            <div className="card-header">Vehicles</div>
+            <div className="card-body">
+                <ul className="list-group list-group-flush">
+                { this.props.data.map((i) => <CarListing data={i} removeCar={this.props.removeCar.bind(this, i.name)} />)}
+                </ul>
+            </div>
         </div>
     }
 }
@@ -165,8 +167,9 @@ class CarAdder extends React.Component<CarAdderProps, Car> {
     }
     
     render() {
-        return <div>
-            <h3>Add a Vehicle</h3>
+        return <div className="card">
+            <div className="card-header">Add a Vehicle</div>
+            <div className="card-body">
             <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                     <label>Name
@@ -204,7 +207,8 @@ class CarAdder extends React.Component<CarAdderProps, Car> {
                     </label>
                 </div>
                 <button type="submit" className="btn btn-primary">Add</button>
-            </form>
+                </form>
+                </div>
         </div>
     }
 }
@@ -294,18 +298,36 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             <h1>Automobile Cost Calculator</h1>
             <div className="row">
                 <div className="col">
-                    <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
-                    <Graph
-                        annualMileage={this.state.annualMileage}
-                        months={this.state.months}
-                        data={this.state.data}
-                        ppg={this.state.ppg}
-                    />
-                    <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
+                    <div className="card" id="graph-panel">
+                        <div className="card-header">
+                            <ul className="nav nav-tabs card-header-tabs">
+                                <li className="nav-item">
+                                    <a className="nav-link active" href="#">Chart</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Table</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="card-body">
+                            <Graph
+                                annualMileage={this.state.annualMileage}
+                                months={this.state.months}
+                                data={this.state.data}
+                                ppg={this.state.ppg}
+                                />
+
+                            <div className="form-group row">
+                                <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
+                            </div>
+                            <div className="form-group row">
+                                <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
+                            </div>
+                        </div>
+                    </div>
                     <CarAdder addCar={this.addCar} />
                 </div>
                 <div className="col-4">
-                    <h2>Vehicles</h2>
                     <CarList data={this.state.data} removeCar={this.removeCar} />
                     <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
                 </div>

@@ -1,0 +1,67 @@
+﻿// Theme Colors
+$smoky-black: #0a0908;
+$gunmetal: #22333b;
+$pearl: #eae0d5;
+$khaki: #c6ac8f;
+$umber: #5e503f;
+$white: darken(#ffffff, 10%);
+
+body {
+    background: $smoky-black;
+    color: $white;
+}
+
+.card {
+    background: $khaki;
+    color: $smoky-black;
+
+    .card-header {
+        background: $umber;
+        color: $pearl;
+    }
+
+    li.list-group-item {
+        background: inherit;
+    }
+
+    input.form-control {
+        background: $pearl;
+        border: none;
+    }
+}
+
+.card + .card {
+    margin-top: 1em;
+}
+
+#graph-panel {
+    background: desaturate(lighten($gunmetal, 10%), 10%);
+    color: $white;
+
+    .nav-link.active {
+        background: lighten($gunmetal, 10%);
+        border-bottom-color: lighten($gunmetal, 10%);
+        color: $white;
+    }
+
+    .card-header {
+        background: $gunmetal;
+    }
+
+    // slider
+    input.form-control {
+        background: $gunmetal;
+        border: none;
+    }
+}
+
+// override c3.js styles
+// see: https://github.com/c3js/c3/issues/210
+#chart {
+    fill: $white;
+
+    // axes and ticks
+    path, line {
+        stroke: $white;
+    }
+}

@@ -30,19 +30,22 @@ export class MileageChanger extends React.Component<
     render() {
         return <form>
             <div className="form-group">
-                <label>Annual Mileage
-                    <input className="form-control" name="Mileage" id="mileage"
-                        min="0"
-                        max="100000"
-                        type="range"
-                        value={this.state.mileage}
-                        onChange={this.handleChange}
-                    />
-                    <p>{this.state.mileage}<br />
-                        {Math.round(this.state.mileage / 12)} miles/month<br />
-                        {Math.round(this.state.mileage / 365)} miles/day<br />
-                        </p>
-                </label>
+                <label htmlFor="mileage" className="col-sm col-form-label">
+                    Annual Mileage</label>
+                <div className="col-sm-8">
+                <input className="form-control" name="Mileage" id="mileage"
+                    min="0"
+                    max="100000"
+                    type="range"
+                    value={this.state.mileage}
+                    onChange={this.handleChange}
+                />
+                    <p><b>Miles Per</b>
+                        Year: {this.state.mileage}
+                        Month: {Math.round(this.state.mileage / 12)}
+                        Day: {Math.round(this.state.mileage / 365)}
+                    </p>
+                </div>
             </div>
         </form>
     }

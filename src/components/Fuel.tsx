@@ -14,6 +14,28 @@ interface GasPriceProps {
     updateGasPrice: any; // change
 }
 
+class GasPriceChangerRow extends React.Component<
+    {id: FuelType, name: string, fuelPrice: number, onChange: any} ,{}
+>    {
+    render() {
+        return <div className="form-group row">
+            <label
+                htmlFor={this.props.id.toString()}
+                className="col-sm col-form-label">
+                {this.props.name}
+            </label>
+            <div className="col-sm-8">
+                <input className="form-control"
+                    name={this.props.name}
+                    id={this.props.id.toString()}
+                    onChange={this.props.onChange}
+                    value={this.props.fuelPrice}
+                />
+            </div>
+        </div>
+    }
+}
+
 export class GasPriceChanger extends React.Component<GasPriceProps, FuelPrice> {
     constructor(props: GasPriceProps) {
         super(props);
@@ -30,30 +52,38 @@ export class GasPriceChanger extends React.Component<GasPriceProps, FuelPrice> {
     }
 
     render() {
-        // TODO: Refactor this
         return (
-            <div className="form-group">
-                <h2>Price of Gas</h2>
-                <label>Regular
-                    <input className="form-control" name="Regular" id={FuelType.regular.toString()}
+            <div className="card">
+                <div className="card-header">
+                    Price of Gas
+                </div>
+                <div className="card-body">
+                    <form>
+                    <GasPriceChangerRow
+                        id={FuelType.regular}
+                        name="Regular"
+                        fuelPrice={this.state.get(FuelType.regular)}
+                        onChange={this.onChange} />
+                    <GasPriceChangerRow
+                        id={FuelType.mid}
+                        name="Mid-Grade"
+                        fuelPrice={this.state.get(FuelType.mid)}
                         onChange={this.onChange}
-                        value={this.state.get(FuelType.regular)} />
-                </label>
-                <label>Mid-Grade
-                    <input className="form-control" name="Mid-Grade" id={FuelType.mid.toString()}
+                    />
+                    <GasPriceChangerRow
+                        id={FuelType.premium}
+                        name="Premium"
+                        fuelPrice={this.state.get(FuelType.premium)}
                         onChange={this.onChange}
-                        value={this.state.get(FuelType.mid)} />
-                </label>
-                <label>Premium
-                    <input className="form-control" name="Premium" id={FuelType.premium.toString()}
+                    />
+                    <GasPriceChangerRow
+                        id={FuelType.diesel}
+                        name="Diesel"
+                        fuelPrice={this.state.get(FuelType.diesel)}
                         onChange={this.onChange}
-                        value={this.state.get(FuelType.premium)} />
-                </label>
-                <label>Diesel
-                    <input className="form-control" name="Diesel" id={FuelType.diesel.toString()}
-                        onChange={this.onChange}
-                        value={this.state.get(FuelType.diesel)} />
-                </label>
+                    />
+                    </form>
+                    </div>
             </div>
         );
     }
