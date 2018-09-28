@@ -1,21 +1,8 @@
 import * as React from "react";
 import * as Helpers from "./helpers";
+import { FuelType, FuelPrice, FuelBadge, GasPriceChanger } from "./Fuel";
 declare var c3: any;
 declare var d3: any;
-
-export enum FuelType {
-    regular,
-    mid,
-    premium,
-    diesel
-}
-
-interface FuelPrice {
-    regular: number;
-    mid: number;
-    premium: number;
-    diesel: number;
-}
 
 export interface Car {
     name: string;
@@ -27,7 +14,7 @@ export interface Car {
 
 interface GraphProps {
     months: number;
-    ppg: number;
+    ppg: FuelPrice;
     data: Array<Car>;
 }
 
@@ -70,16 +57,18 @@ class Graph extends React.Component<GraphProps> {
         };
         
         for (var i in data) {
+            const car = data[i];
             let cost: Array<any> = [
-                data[i].name
+                car.name
             ];
             
             // Cost of car at months[j] months
             // parseFloat() needed to avoid string errors
             for (var m = 0; m < this.props.months; m++) {
                 cost.push(
-                    data[i].price +
-                    ((m * 1000)/data[i].mpg * this.props.ppg)
+                    car.price +
+                    ((m * 1000) / car.mpg *
+                        this.props.ppg.get(car.fuelType))
                 );
             }
             
@@ -91,10 +80,7 @@ class Graph extends React.Component<GraphProps> {
     
     render() {
         this.updateChart();
-
-        return <div className="col">
-            <div id="chart"></div>
-        </div>
+        return <div id="chart"></div>
     }
 }
 
@@ -104,45 +90,13 @@ interface CarListingProps {
 }
 
 function CarListing(props: CarListingProps) {
-    return (<li className="list-group-item">
-    {props.data.name} 
-    <FuelBadge fuel={props.data.fuelType} />
-    <a onClick={props.removeCar}>[Remove]</a>
-    </li>);
-}
-
-function FuelBadge(props: { fuel: FuelType }) {
-    var background = {
-        backgroundColor: 'red',
-        display: 'inline-block'
-    };
-
-    let symbol: string = "87";
-
-    console.log(props);
-
-    switch (props.fuel) {
-        case FuelType.regular:
-            background.backgroundColor = 'red';
-            symbol = "87";
-            break;
-        case FuelType.mid:
-            background.backgroundColor = 'yellow';
-            symbol = "89";
-            break;
-        case FuelType.premium:
-            background.backgroundColor = 'blue';
-            symbol = "92";
-            break;
-        case FuelType.diesel:
-            background.backgroundColor = 'green';
-            symbol = "D";
-            break;
-        default:
-            break;
-    }
-   
-    return <div style={background}>{symbol}</div>
+    return (
+        <li>
+        {props.data.name} 
+        <FuelBadge fuel={props.data.fuelType} /> 
+        <button type="button" className="btn btn-danger btn-sm" onClick={props.removeCar}>x</button>
+        </li>
+    );
 }
 
 interface CarListProps {
@@ -153,7 +107,7 @@ interface CarListProps {
 class CarList extends React.Component<CarListProps> {
     render() {
         return <div>
-            <ul className="list-group">
+            <ul>
             { this.props.data.map((i) => <CarListing data={i} removeCar={this.props.removeCar.bind(this, i.name)} />)}
             </ul>
         </div>
@@ -250,35 +204,6 @@ class CarAdder extends React.Component<CarAdderProps, Car> {
     }
 }
 
-interface GasPriceProps {
-    ppg: number;   // change
-    onChange: any; // change
-}
-
-class GasPrice extends React.Component<GasPriceProps> {
-    constructor(props) {
-        super(props);
-
-        this.onChange = this.onChange.bind(this);
-    }
-
-    onChange(event) {
-
-    }
-
-    render() {
-        return (
-            <div>
-                <h2>Price of Gas</h2>
-                <input name="Regular" onChange={this.props.onChange} />
-                <input name="Mid-Grade" onChange={this.props.onChange} />
-                <input name="Premium" onChange={this.props.onChange} />
-                <input name="Diesel" onChange={this.props.onChange} />
-            </div>
-        );
-    }
-}
-
 // Overall controller for all other components
 export interface MpgCalculatorProps {
     data: Array<Car>;
@@ -286,29 +211,41 @@ export interface MpgCalculatorProps {
 
 export interface MpgCalculatorState {
     data: Array<Car>;
-    ppg: number;
+    ppg: FuelPrice;
     months: number;
 };
 
 export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalculatorState> {
     constructor(props: MpgCalculatorProps) {
         super(props);
+
+        let temp_ppg: FuelPrice = new Map([
+            [FuelType.regular, 2.87],
+            [FuelType.mid, 3.15],
+            [FuelType.premium, 3.4],
+            [FuelType.diesel, 3.18]
+        ]);
         
         this.state = {
             data: props.data,
-            ppg: 3,
+            ppg: temp_ppg,
             months: 48
         };
-        
+
+        console.log(this.state);
+
         this.updateGasPrice = this.updateGasPrice.bind(this);
         this.addCar = this.addCar.bind(this);
         this.removeCar = this.removeCar.bind(this);
     }
     
-    updateGasPrice(event) {
+    updateGasPrice(_ppg: FuelPrice) {
         this.setState({
-            ppg: event.target.value
+            ppg: _ppg
         });
+
+        console.log("Updating gas prices");
+        console.log(this.state);
     }
     
     addCar(data: Car) {
@@ -338,17 +275,20 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
     
     render() {
         return <div className="container-fluid">
+            <h1>Car Cost Calculator</h1>
             <div className="row">
-                <Graph
-                    months={this.state.months}
-                    data={this.state.data} ppg={this.state.ppg} />
                 <div className="col">
-                    <h2>Vehicles</h2>
-                    <CarList data={this.state.data} removeCar={this.removeCar} />
+                    <Graph
+                        months={this.state.months}
+                        data={this.state.data} ppg={this.state.ppg} />
                     <CarAdder addCar={this.addCar} />
                 </div>
+                <div className="col-4">
+                    <h2>Vehicles</h2>
+                    <CarList data={this.state.data} removeCar={this.removeCar} />
+                    <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
+                </div>
             </div>
-            <GasPrice ppg={this.state.ppg} onChange={this.updateGasPrice} />
         </div>
     }
 }
