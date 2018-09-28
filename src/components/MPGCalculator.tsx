@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as Helpers from "./helpers";
 import { FuelType, FuelPrice, FuelBadge, GasPriceChanger } from "./Fuel";
+import { MileageChanger } from "./Mileage";
+import { MonthChanger } from "./GraphControls";
 declare var c3: any;
 declare var d3: any;
 
@@ -14,6 +16,7 @@ export interface Car {
 
 interface GraphProps {
     months: number;
+    annualMileage: number;
     ppg: FuelPrice;
     data: Array<Car>;
 }
@@ -58,6 +61,8 @@ class Graph extends React.Component<GraphProps> {
         
         for (var i in data) {
             const car = data[i];
+            const monthlyMileage = this.props.annualMileage / 12;
+
             let cost: Array<any> = [
                 car.name
             ];
@@ -67,7 +72,7 @@ class Graph extends React.Component<GraphProps> {
             for (var m = 0; m < this.props.months; m++) {
                 cost.push(
                     car.price +
-                    ((m * 1000) / car.mpg *
+                    ((m * monthlyMileage) / car.mpg *
                         this.props.ppg.get(car.fuelType))
                 );
             }
@@ -213,6 +218,7 @@ export interface MpgCalculatorState {
     data: Array<Car>;
     ppg: FuelPrice;
     months: number;
+    annualMileage: number;
 };
 
 export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalculatorState> {
@@ -229,12 +235,13 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.state = {
             data: props.data,
             ppg: temp_ppg,
-            months: 48
+            months: 48,
+            annualMileage: 12000
         };
 
-        console.log(this.state);
-
         this.updateGasPrice = this.updateGasPrice.bind(this);
+        this.updateMileage = this.updateMileage.bind(this);
+        this.updateMonths = this.updateMonths.bind(this);
         this.addCar = this.addCar.bind(this);
         this.removeCar = this.removeCar.bind(this);
     }
@@ -243,9 +250,18 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.setState({
             ppg: _ppg
         });
+    }
 
-        console.log("Updating gas prices");
-        console.log(this.state);
+    updateMileage(mileage: number) {
+        this.setState({
+            annualMileage: mileage
+        });
+    }
+
+    updateMonths(_months: number) {
+        this.setState({
+            months: _months
+        });
     }
     
     addCar(data: Car) {
@@ -275,12 +291,17 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
     
     render() {
         return <div className="container-fluid">
-            <h1>Car Cost Calculator</h1>
+            <h1>Automobile Cost Calculator</h1>
             <div className="row">
                 <div className="col">
+                    <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
                     <Graph
+                        annualMileage={this.state.annualMileage}
                         months={this.state.months}
-                        data={this.state.data} ppg={this.state.ppg} />
+                        data={this.state.data}
+                        ppg={this.state.ppg}
+                    />
+                    <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
                     <CarAdder addCar={this.addCar} />
                 </div>
                 <div className="col-4">
