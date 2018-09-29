@@ -2,16 +2,11 @@ import * as React from "react";
 import * as Helpers from "./helpers";
 import { FuelType, FuelPrice, FuelBadge, GasPriceChanger } from "./Fuel";
 import { MileageChanger, MonthChanger } from "./GraphControls";
+import { Tabs } from "./Tabs";
+import { Table } from "./Table";
+import { Car } from "./Car";
 declare var c3: any;
 declare var d3: any;
-
-export interface Car {
-    name: string;
-    price: number;
-    mpg: number;
-    insurance: number;
-    fuelType: FuelType;
-}
 
 interface GraphProps {
     months: number;
@@ -223,6 +218,7 @@ export interface MpgCalculatorState {
     ppg: FuelPrice;
     months: number;
     annualMileage: number;
+    activeTab: string;
 };
 
 export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalculatorState> {
@@ -240,7 +236,8 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             data: props.data,
             ppg: temp_ppg,
             months: 48,
-            annualMileage: 12000
+            annualMileage: 12000,
+            activeTab: "Chart"
         };
 
         this.updateGasPrice = this.updateGasPrice.bind(this);
@@ -248,6 +245,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.updateMonths = this.updateMonths.bind(this);
         this.addCar = this.addCar.bind(this);
         this.removeCar = this.removeCar.bind(this);
+        this.setActive = this.setActive.bind(this);
     }
     
     updateGasPrice(_ppg: FuelPrice) {
@@ -292,37 +290,55 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             data: temp
         });
     }
+
+    setActive(name: string) {
+        this.setState({
+            activeTab: name
+        });
+    }
     
     render() {
+        const tabItems: Array<string> = [
+            "Chart", "Table"
+        ];
+
+        let body;
+        
+        if (this.state.activeTab == "Chart") {
+            body = <Graph
+                annualMileage={this.state.annualMileage}
+                months={this.state.months}
+                data={this.state.data}
+                ppg={this.state.ppg}
+            />;
+        } else {
+            body = <Table
+                annualMileage={this.state.annualMileage}
+                months={this.state.months}
+                data={this.state.data}
+                ppg={this.state.ppg}
+            />;
+        }
+
         return <div className="container-fluid">
             <h1>Automobile Cost Calculator</h1>
             <div className="row">
                 <div className="col">
                     <div className="card" id="graph-panel">
                         <div className="card-header">
-                            <ul className="nav nav-tabs card-header-tabs">
-                                <li className="nav-item">
-                                    <a className="nav-link active" href="#">Chart</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#">Table</a>
-                                </li>
-                            </ul>
+                            <Tabs items={tabItems}
+                                activeItem={this.state.activeTab}
+                                setActive={this.setActive}
+                            />
                         </div>
                         <div className="card-body">
-                            <Graph
-                                annualMileage={this.state.annualMileage}
-                                months={this.state.months}
-                                data={this.state.data}
-                                ppg={this.state.ppg}
-                                />
-
+                            {body}
                             <div className="form-group row">
                                 <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
                             </div>
                             <div className="form-group row">
                                 <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
-                            </div>
+                            </div>;
                         </div>
                     </div>
                     <CarAdder addCar={this.addCar} />
