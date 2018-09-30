@@ -27,6 +27,9 @@ class GasPriceChangerRow extends React.Component<
             <div className="col-sm-8">
                 <input className="form-control"
                     name={this.props.name}
+                    type="number"
+                    step="0.01"
+                    min="0"
                     id={this.props.id.toString()}
                     onChange={this.props.onChange}
                     value={this.props.fuelPrice}
@@ -74,6 +77,8 @@ export class GasPriceChanger extends React.Component<
     }
 
     handleSubmit(event) {
+        /* "Update" button pressed */
+
         // Pass updated prices back up to MpgCalculator
         let newPpg: FuelPrice = new Map([
             [FuelType.regular, parseFloat(this.state.temp_ppg.get(FuelType.regular))],
@@ -84,14 +89,22 @@ export class GasPriceChanger extends React.Component<
 
         this.props.updateGasPrice(newPpg);
         event.preventDefault(); // Prevent submit from reloading page
+
+        // Disable update button
+        this.setState({
+            updateable: false
+        });
     }
 
     render() {
-        let buttonClass: string;
+        let updateButton;
         if (this.state.updateable)
-            buttonClass = "btn btn-primary";
+            updateButton = <button
+                type="submit"
+                className="btn btn-primary">Update</button>;
         else
-            buttonClass = "btn btn-primary disabled";
+            updateButton = <button
+                className="btn btn-primary disabled" disabled>Update</button>;
 
         return (
             <div className="card">
@@ -124,10 +137,7 @@ export class GasPriceChanger extends React.Component<
                         onChange={this.onChange}
                         />
 
-                    <button
-                        type="submit"
-                        className={buttonClass}
-                    >Update</button>
+                    {updateButton}
                     </form>
                     </div>
             </div>

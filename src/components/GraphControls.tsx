@@ -28,19 +28,16 @@ export class MonthChanger extends React.Component<MonthChangerProps, { months: n
 
     render() {
         return <form>
-            <div className="form-group">
-                <label htmlFor="months" className="col-sm col-form-label">Months to Display</label>
-                <div className="col-sm-8">
-                <input className="form-control" name="Months" id="months"
-                    min="0"
-                    max="360"
-                    type="range"
-                    value={this.state.months}
-                    onChange={this.handleChange}
-                />
-                    <p>0 to {this.state.months}</p>
-                </div>
-            </div>
+            <input className="form-control" name="Months" id="months"
+                min="0"
+                step="1"
+                type="number"
+                value={this.state.months}
+                onChange={this.handleChange}
+            />
+            <label htmlFor="months" className="col-sm col-form-label">
+                <b>Months to Show</b>
+            </label>
         </form>
     }
 }
@@ -74,24 +71,19 @@ export class MileageChanger extends React.Component<
 
     render() {
         return <form>
-            <div className="form-group">
-                <label htmlFor="mileage" className="col-sm col-form-label">
-                    Annual Mileage</label>
-                <div className="col-sm-8">
-                    <input className="form-control" name="Mileage" id="mileage"
-                        min="0"
-                        max="100000"
-                        type="range"
-                        value={this.state.mileage}
-                        onChange={this.handleChange}
-                    />
-                    <p><b>Miles Per </b>
-                        Year: {this.state.mileage} &nbsp;
-                        Month: {Math.round(this.state.mileage / 12)} &nbsp;
-                        Day: {Math.round(this.state.mileage / 365)} 
-                    </p>
-                </div>
-            </div>
+            <input className="form-control" name="Mileage" id="mileage"
+                min="0"
+                max="100000"
+                type="range"
+                value={this.state.mileage}
+                onChange={this.handleChange}
+            />
+            <label htmlFor="mileage" className="col-sm col-form-label">
+                <b>Miles Per: </b>
+                Year: {this.state.mileage} &nbsp;
+                Month: {Math.round(this.state.mileage / 12)} &nbsp;
+                Day: {Math.round(this.state.mileage / 365)} 
+            </label>
         </form>
     }
 }

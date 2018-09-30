@@ -168,7 +168,7 @@ class CarAdder extends React.Component<CarAdderProps, Car> {
             <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                     <label>Name
-                        <input className="form-control" name="Name" id="name" onChange={this.handleChange} />
+                        <input className="form-control" name="Name" id="name" onChange={this.handleChange} required />
                     </label>
                 </div>
                 <div className="form-group">
@@ -183,12 +183,12 @@ class CarAdder extends React.Component<CarAdderProps, Car> {
                 </div>
                 <div className="form-group">
                     <label>Price
-                        <input className="form-control" type="number" name="Price" id="price" onChange={this.handleChange} />
+                        <input className="form-control" type="number" min="0" name="Price" id="price" onChange={this.handleChange} required />
                     </label>
                 </div>
                 <div className="form-group">
                     <label>MPG
-                        <input className="form-control" type="number" name="MPG" id="mpg" onChange={this.handleChange} />
+                        <input className="form-control" type="number" min="0" name="MPG" id="mpg" onChange={this.handleChange} required />
                     </label>
                 </div>
                 <div className="">
@@ -313,11 +313,18 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                     data={this.state.data}
                     ppg={this.state.ppg}
                 />
-                <div className="form-group row">
-                    <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
-                </div>
-                <div className="form-group row">
-                    <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
+                <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignContent: 'space-around',
+                    flexDirection: 'row'
+                }}>
+                    <div style={{ width: '72.5%' }}>
+                        <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
+                    </div>
+                    <div style={{width: '22.5%'}}>
+                        <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
+                    </div>
                 </div>
             </div>;
         } else {
