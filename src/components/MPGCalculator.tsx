@@ -249,6 +249,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
     }
     
     updateGasPrice(_ppg: FuelPrice) {
+        console.log("Updating gas prices");
         this.setState({
             ppg: _ppg
         });
@@ -305,12 +306,20 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         let body;
         
         if (this.state.activeTab == "Chart") {
-            body = <Graph
-                annualMileage={this.state.annualMileage}
-                months={this.state.months}
-                data={this.state.data}
-                ppg={this.state.ppg}
-            />;
+            body = <div>
+                <Graph
+                    annualMileage={this.state.annualMileage}
+                    months={this.state.months}
+                    data={this.state.data}
+                    ppg={this.state.ppg}
+                />
+                <div className="form-group row">
+                    <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
+                </div>
+                <div className="form-group row">
+                    <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
+                </div>
+            </div>;
         } else {
             body = <Table
                 annualMileage={this.state.annualMileage}
@@ -333,19 +342,13 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                         </div>
                         <div className="card-body">
                             {body}
-                            <div className="form-group row">
-                                <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
-                            </div>
-                            <div className="form-group row">
-                                <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
-                            </div>;
                         </div>
                     </div>
                     <CarAdder addCar={this.addCar} />
                 </div>
                 <div className="col-4">
-                    <CarList data={this.state.data} removeCar={this.removeCar} />
                     <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
+                    <CarList data={this.state.data} removeCar={this.removeCar} />
                 </div>
             </div>
         </div>
