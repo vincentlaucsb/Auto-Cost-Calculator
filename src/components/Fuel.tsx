@@ -1,4 +1,6 @@
 ﻿import * as React from "react";
+import { Modal } from "./Modal";
+import { InfoBox } from "./InfoBox";
 
 export enum FuelType {
     regular,
@@ -109,7 +111,14 @@ export class GasPriceChanger extends React.Component<
         return (
             <div className="card">
                 <div className="card-header">
-                    Price of Gas
+                    Price of Gas <InfoBox
+                        title="Good to Know: Fuel">
+                        <p>
+                            While there may be benefits to using mid-grade (sometimes labelled "Plus") or premium fuel,
+                            most consumer vehicles in the US will run just fine on regular unleaded. Generally speaking,
+                            it is best to follow the recommendations in your owner's manual.
+                        </p>
+                    </InfoBox>
                 </div>
                 <div className="card-body">
                     <form onSubmit={this.handleSubmit}>

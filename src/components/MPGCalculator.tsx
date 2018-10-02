@@ -4,7 +4,7 @@ import { FuelType, FuelPrice, FuelBadge, GasPriceChanger } from "./Fuel";
 import { MileageChanger, MonthChanger } from "./GraphControls";
 import { Tabs } from "./Tabs";
 import { Table } from "./Table";
-import { Car } from "./Car";
+import { Car, CarList } from "./Car";
 declare var c3: any;
 declare var d3: any;
 
@@ -80,131 +80,6 @@ class Graph extends React.Component<GraphProps> {
     render() {
         this.updateChart();
         return <div id="chart"></div>
-    }
-}
-
-interface CarListingProps {
-    data: Car;
-    removeCar: any; // Fix later
-}
-
-function CarListing(props: CarListingProps) {
-    return (
-        <li className="list-group-item">
-        {props.data.name} 
-        <FuelBadge fuel={props.data.fuelType} /> 
-        <button type="button" className="btn btn-danger btn-sm" onClick={props.removeCar}>x</button>
-        </li>
-    );
-}
-
-interface CarListProps {
-    data: Array<Car>;
-    removeCar: any; // fix later
-};
-
-class CarList extends React.Component<CarListProps> {
-    render() {
-        return <div className="card">
-            <div className="card-header">Vehicles</div>
-            <div className="card-body">
-                <ul className="list-group list-group-flush">
-                { this.props.data.map((i) => <CarListing data={i} removeCar={this.props.removeCar.bind(this, i.name)} />)}
-                </ul>
-            </div>
-        </div>
-    }
-}
-
-interface CarAdderProps {
-    addCar: any; // fix later
-}
-
-class CarAdder extends React.Component<CarAdderProps, Car> {
-    constructor(props: CarAdderProps) {
-        super(props);
-        
-        // Default values for new cars
-        this.state = {
-            'name': null,
-            'mpg': null,
-            'price': 0,
-            'fuelType': FuelType.regular,
-            'insurance': null
-        };
-        
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.addCar = this.addCar.bind(this);
-    }
-    
-    addCar(state) {
-        this.props.addCar(state);
-    }
-    
-    handleChange(event) {
-        // Update state to reflect input values
-        let temp: Car = this.state;
-        let new_value: any = event.target.value;
-
-        // TODO: Might want to revise second condition
-        if (event.target.type == "number" || !isNaN(event.target.value)) {
-            new_value = parseFloat(new_value);
-        }
-
-        temp[event.target.id] = new_value;
-        this.setState(temp);
-    }
-    
-    handleSubmit(event) {
-        this.addCar(this.state);
-        event.preventDefault(); // Stop reloading page
-    }
-    
-    render() {
-        return <div className="card">
-            <div className="card-header">Add a Vehicle</div>
-            <div className="card-body">
-            <form onSubmit={this.handleSubmit}>
-                <div className="form-group">
-                    <label>Name
-                        <input className="form-control" name="Name" id="name" onChange={this.handleChange} required />
-                    </label>
-                </div>
-                <div className="form-group">
-                    <label>Fuel Type
-                        <select className="form-control" name="Fuel Type" id="fuelType" onChange={this.handleChange}>
-                            <option value={FuelType.regular}>Regular (87)</option>
-                            <option value={FuelType.mid}>Mid-Grade (89)</option>
-                            <option value={FuelType.premium}>Premium (92)</option>
-                            <option value={FuelType.diesel}>Diesel</option>
-                        </select>
-                    </label>
-                </div>
-                <div className="form-group">
-                    <label>Price
-                        <input className="form-control" type="number" min="0" name="Price" id="price" onChange={this.handleChange} required />
-                    </label>
-                </div>
-                <div className="form-group">
-                    <label>MPG
-                        <input className="form-control" type="number" min="0" name="MPG" id="mpg" onChange={this.handleChange} required />
-                    </label>
-                </div>
-                <div className="">
-                    <label>
-                        Insurance
-                    </label>
-                </div>
-                <div className="form-group">
-                    <label>Vehicle Registration
-                        <input className="form-control" type="number" name="MPG" id="mpg" onChange={this.handleChange} />
-                    </label>
-                </div>
-                <button type="submit" className="btn btn-primary">Add</button>
-                </form>
-                </div>
-        </div>
     }
 }
 
@@ -338,6 +213,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
 
         return <div className="container-fluid">
             <h1>Automobile Cost Calculator</h1>
+
             <div className="row">
                 <div className="col">
                     <div className="card" id="graph-panel">
@@ -351,11 +227,10 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                             {body}
                         </div>
                     </div>
-                    <CarAdder addCar={this.addCar} />
                 </div>
                 <div className="col-4">
                     <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
-                    <CarList data={this.state.data} removeCar={this.removeCar} />
+                    <CarList data={this.state.data} addCar={this.addCar} removeCar={this.removeCar} />
                 </div>
             </div>
         </div>
