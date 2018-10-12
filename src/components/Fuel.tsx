@@ -9,6 +9,19 @@ export enum FuelType {
     diesel
 }
 
+function fuelString(type: FuelType) {
+    switch (type) {
+        case FuelType.regular:
+            return "Regular (87)";
+        case FuelType.mid:
+            return "Mid (89)";
+        case FuelType.premium:
+            return "Premium (91)";
+        case FuelType.diesel:
+            return "Diesel";        
+    }
+}
+
 export type FuelPrice = Map<FuelType, number>;
 
 interface GasPriceProps {
@@ -152,32 +165,4 @@ export class GasPriceChanger extends React.Component<
             </div>
         );
     }
-}
-
-export function FuelBadge(props: { fuel: FuelType }) {
-    var background = {
-        backgroundColor: 'yellow',
-        display: 'inline-block'
-    };
-
-    let symbol: string;
-
-    switch (props.fuel) {
-        case FuelType.regular:
-            symbol = "87";
-            break;
-        case FuelType.mid:
-            symbol = "89";
-            break;
-        case FuelType.premium:
-            symbol = "92";
-            break;
-        case FuelType.diesel:
-            symbol = "D";
-            break;
-        default:
-            break;
-    }
-
-    return <div style={background}>{symbol}</div>
 }

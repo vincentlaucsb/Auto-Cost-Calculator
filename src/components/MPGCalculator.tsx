@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Helpers from "./helpers";
-import { FuelType, FuelPrice, FuelBadge, GasPriceChanger } from "./Fuel";
+import { FuelType, FuelPrice, GasPriceChanger } from "./Fuel";
 import { MileageChanger, MonthChanger } from "./GraphControls";
 import { Tabs } from "./Tabs";
 import { Table } from "./Table";
@@ -119,12 +119,12 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.updateMileage = this.updateMileage.bind(this);
         this.updateMonths = this.updateMonths.bind(this);
         this.addCar = this.addCar.bind(this);
+        this.removeAll = this.removeAll.bind(this);
         this.removeCar = this.removeCar.bind(this);
         this.setActive = this.setActive.bind(this);
     }
     
     updateGasPrice(_ppg: FuelPrice) {
-        console.log("Updating gas prices");
         this.setState({
             ppg: _ppg
         });
@@ -143,15 +143,30 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
     }
     
     addCar(data: Car) {
-        // Add car listing        
+        // Add car listing
+        // Returns false if car with same name already exists
+
+        for (let i in this.state.data) {
+            if (this.state.data[i].name == data.name) {
+                return false;
+            }
+        }
+
         var temp = this.state.data;
         temp.push(data);
         
         this.setState({
             data: temp
         });
+
+        return true;
     }
-    
+
+    removeAll() {
+        // Remove all car listings
+        this.setState({ data: [] });
+    }
+
     removeCar(name: string) {
         // Remove car listings by name
         var temp = [];
@@ -230,7 +245,10 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                 </div>
                 <div className="col-4">
                     <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
-                    <CarList data={this.state.data} addCar={this.addCar} removeCar={this.removeCar} />
+                    <CarList data={this.state.data}
+                        addCar={this.addCar}
+                        removeAll={this.removeAll}
+                        removeCar={this.removeCar} />
                 </div>
             </div>
         </div>

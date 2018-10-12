@@ -1,6 +1,10 @@
 ﻿import * as React from "react";
 
 interface ModalProps {
+    submit?: {
+        buttonName: string;
+        formName: string;
+    };
     children?: any;
     title: string;
     triggerText: string;
@@ -58,8 +62,18 @@ export class Modal extends React.Component<ModalProps, ModalState> {
             };
         }
 
+        var submit;
+        if (this.props.submit) {
+            submit = <button
+                type="submit"
+                className="btn btn-primary"
+                form={this.props.submit.formName}>
+                {this.props.submit.buttonName}
+            </button>
+        }
+
         return <div>
-        <div className="modal" style={modalStyle} id="myModal" tabIndex={-1} role="dialog">
+        <div className="modal" style={modalStyle} tabIndex={-1} role="dialog">
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -71,8 +85,9 @@ export class Modal extends React.Component<ModalProps, ModalState> {
                     <div className="modal-body">
                         {this.props.children}
                     </div>
-                    <div className="modal-footer">
-                        <button type="button" onClick={this.closeModal} className="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <div className="modal-footer">
+                            {submit}
+                            <button type="button" onClick={this.closeModal} className="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
