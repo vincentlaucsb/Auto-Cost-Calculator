@@ -9,16 +9,16 @@ export enum FuelType {
     diesel
 }
 
-function fuelString(type: FuelType) {
+export function fuelString(type: FuelType) {
     switch (type) {
         case FuelType.regular:
             return "Regular (87)";
         case FuelType.mid:
-            return "Mid (89)";
+            return "Mid-Grade (89)";
         case FuelType.premium:
-            return "Premium (91)";
+            return "Premium (92)";
         case FuelType.diesel:
-            return "Diesel";        
+            return "Diesel";  
     }
 }
 

@@ -7,7 +7,7 @@ interface ModalProps {
     };
     children?: any;
     title: string;
-    triggerText: string;
+    triggerText?: string;
     visible: boolean;
 }
 
@@ -62,6 +62,15 @@ export class Modal extends React.Component<ModalProps, ModalState> {
             };
         }
 
+        let triggerButton;
+        if (this.props.triggerText !== null) {
+            triggerButton = <button
+                className="btn btn-primary"
+                onClick={this.handleClick}>
+                {this.props.triggerText}
+            </button>;
+        }
+
         var submit;
         if (this.props.submit) {
             submit = <button
@@ -72,7 +81,7 @@ export class Modal extends React.Component<ModalProps, ModalState> {
             </button>
         }
 
-        return <div>
+        return <div style={{ display: 'inline' }}>
         <div className="modal" style={modalStyle} tabIndex={-1} role="dialog">
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
@@ -92,11 +101,7 @@ export class Modal extends React.Component<ModalProps, ModalState> {
                 </div>
             </div>
             </div>
-            <button
-                className="btn btn-primary"
-                onClick={this.handleClick}>
-                {this.props.triggerText}
-            </button>
+            {triggerButton}
         </div>;
     }   
 }

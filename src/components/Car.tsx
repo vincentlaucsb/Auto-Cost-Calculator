@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { FuelType } from "./Fuel";
+import { fuelString, FuelType } from "./Fuel";
 import { Modal } from "./Modal";
 
 export interface Car {
@@ -71,36 +71,51 @@ export class CarList extends React.Component<CarListProps, {
     }
 
     render() {
-        var carInfo = <p>
-            Fuel Type: ...
-            Price: ...
-        </p>;
+        var carInfo =
+            <div className="row">
+                <div className="col-sm">
+                    MPG:
+                </div>
+                <div className="col-sm">
+                    Fuel Type:
+                </div><div className="col-sm">
+                    Price:
+            </div>
+        </div>;
 
         if (this.state.activeCar) {
-            carInfo = <p>
-                Fuel Type: {this.state.activeCar.fuelType}
-                Price: {this.state.activeCar.price}
-            </p>;
+            carInfo = <div className="row">
+                <div className="col-sm">
+                    MPG: {this.state.activeCar.mpg}
+                    </div>
+                <div className="col-sm">
+                    Fuel Type: {fuelString(this.state.activeCar.fuelType)}
+                    </div><div className="col-sm">
+                    Price: ${this.state.activeCar.price}
+                    </div>
+            </div>;
         }
 
         return <div className="card">
             <div className="card-header">
                 Vehicles
-                <Modal
-                    title="Add Vehicle"
-                    triggerText="Add a Vehicle"
-                    submit={{
-                        buttonName: "Add",
-                        formName: "addCar"
-                    }}
-                    visible={false}>
-                    <CarAdder addCar={this.props.addCar} />
-                </Modal>
-                <button
-                    className="btn btn-primary btn-danger"
-                    onClick={this.props.removeAll}>
-                    Clear All
-                </button>
+                <div style={{float: 'right'}}>
+                    <Modal
+                        title="Add Vehicle"
+                        triggerText="+"
+                        submit={{
+                            buttonName: "Add",
+                            formName: "addCar"
+                        }}
+                        visible={false}>
+                        <CarAdder addCar={this.props.addCar} />
+                    </Modal>
+                    <button
+                        className="btn btn-primary btn-danger"
+                        onClick={this.props.removeAll}>
+                        x
+                    </button>
+                    </div>
             </div>
             <div className="card-body">
                 {carInfo}
@@ -175,6 +190,10 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
         event.preventDefault(); // Stop reloading page
     }
 
+    fuelOption(type: FuelType) {
+        return <option value={type}>{fuelString(type)}</option>;
+    }
+
     render() {
         var errorMessage;
 
@@ -195,10 +214,10 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
                 <div className="form-group">
                     <label>Fuel Type
                         <select className="form-control" name="Fuel Type" id="fuelType" onChange={this.handleChange}>
-                            <option value={FuelType.regular}>Regular (87)</option>
-                            <option value={FuelType.mid}>Mid-Grade (89)</option>
-                            <option value={FuelType.premium}>Premium (92)</option>
-                            <option value={FuelType.diesel}>Diesel</option>
+                            {this.fuelOption(FuelType.regular)}
+                            {this.fuelOption(FuelType.mid)}
+                            {this.fuelOption(FuelType.premium)}
+                            {this.fuelOption(FuelType.diesel)}
                         </select>
                     </label>
                 </div>

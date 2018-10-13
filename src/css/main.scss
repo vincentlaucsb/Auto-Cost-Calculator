@@ -34,14 +34,21 @@ body {
     margin-top: 1em;
 }
 
+$active-panel-color: desaturate(lighten($gunmetal, 10%), 10%);
+
 #graph-panel {
-    background: desaturate(lighten($gunmetal, 10%), 10%);
+    background: $active-panel-color;
     color: $white;
 
     .nav-link.active {
-        background: lighten($gunmetal, 10%);
-        border-bottom-color: lighten($gunmetal, 10%);
+        background: $active-panel-color;
+        border-bottom-color: $active-panel-color;
         color: $white;
+    }
+
+    .nav-link:hover {
+        background: $active-panel-color;
+        border-bottom-color: $active-panel-color;
     }
 
     .card-header {
@@ -64,4 +71,8 @@ body {
     path, line {
         stroke: $white;
     }
+}
+
+.modal {
+    color: $gunmetal;
 }
