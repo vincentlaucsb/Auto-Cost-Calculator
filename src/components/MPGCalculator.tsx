@@ -62,13 +62,9 @@ class Graph extends React.Component<GraphProps> {
             ];
             
             // Cost of car at months[j] months
-            // parseFloat() needed to avoid string errors
             for (var m = 0; m < this.props.months; m++) {
-                cost.push(
-                    car.price +
-                    ((m * monthlyMileage) / car.mpg *
-                        this.props.ppg.get(car.fuelType))
-                );
+                cost.push(car.costToDriveMonth(
+                    monthlyMileage, m, this.props.ppg));
             }
             
             graphData.columns.push(cost);

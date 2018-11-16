@@ -1,6 +1,7 @@
 ﻿import * as React from "react";
 import { FuelPrice } from "./Fuel";
 import { Car } from "./Car";
+import { money } from "./helpers";
 
 interface TableProps {
     months: number;
@@ -10,32 +11,34 @@ interface TableProps {
 }
 
 export class Table extends React.Component<TableProps> {
-    costToDrive(i: Car, miles: number) {
-        return '$' + parseFloat(
-            (miles / i.mpg * this.props.ppg.get(i.fuelType)).toFixed(2)
-        );
-    }
-
     render() {
+        const ppg = this.props.ppg;
+
         return <table>
-            <tr>
-                <th></th>
-                <th colSpan={3}>Cost to Drive (Gas Only)</th>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <th>10 Miles</th>
-                <th>25 Miles</th>
-                <th>100 Miles</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th colSpan={4}>Cost to Drive (Gas Only)</th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>10 Miles</th>
+                    <th>25 Miles</th>
+                    <th>100 Miles</th>
+                    <th>One Month</th>
+                </tr>
+            </thead>
+            <tbody>
             {this.props.data.map((i) =>
                 <tr>
                     <td>{i.name}</td>
-                    <td>{this.costToDrive(i, 10)}</td>
-                    <td>{this.costToDrive(i, 25)}</td>
-                    <td>{this.costToDrive(i, 100)}</td>
+                    <td>{money(i.costToDriveGasOnly(10, ppg))}</td>
+                    <td>{money(i.costToDriveGasOnly(25, ppg))}</td>
+                    <td>{money(i.costToDriveGasOnly(100, ppg))}</td>
+                    <td>{money(i.costToDriveGasOnly(this.props.annualMileage / 12, ppg))}</td>
                 </tr>
-            )}
+                )}
+            </tbody>
         </table>
     }
 }

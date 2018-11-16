@@ -7,3 +7,8 @@
 
     return ret;
 }
+
+export function money(dollars: number): string {
+    // Given a number, format it with a dollar symbol
+    return '$' + dollars.toFixed(2);
+}

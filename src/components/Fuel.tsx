@@ -30,18 +30,18 @@ interface GasPriceProps {
 }
 
 class GasPriceChangerRow extends React.Component<
-    {id: FuelType, name: string, fuelPrice: string, onChange: any} ,{}
+    {id: FuelType, fuelPrice: string, onChange: any} ,{}
 >    {
     render() {
         return <div className="form-group row">
             <label
                 htmlFor={this.props.id.toString()}
                 className="col-sm col-form-label">
-                {this.props.name}
+                {fuelString(this.props.id)}
             </label>
             <div className="col-sm-8">
                 <input className="form-control"
-                    name={this.props.name}
+                    name={fuelString(this.props.id)}
                     type="number"
                     step="0.01"
                     min="0"
@@ -137,24 +137,20 @@ export class GasPriceChanger extends React.Component<
                     <form onSubmit={this.handleSubmit}>
                     <GasPriceChangerRow
                         id={FuelType.regular}
-                        name="Regular"
                         fuelPrice={this.state.temp_ppg.get(FuelType.regular)}
                         onChange={this.onChange} />
                     <GasPriceChangerRow
                         id={FuelType.mid}
-                        name="Mid-Grade"
                         fuelPrice={this.state.temp_ppg.get(FuelType.mid)}
                         onChange={this.onChange}
                     />
                     <GasPriceChangerRow
                         id={FuelType.premium}
-                        name="Premium"
                         fuelPrice={this.state.temp_ppg.get(FuelType.premium)}
                         onChange={this.onChange}
                     />
                     <GasPriceChangerRow
                         id={FuelType.diesel}
-                        name="Diesel"
                         fuelPrice={this.state.temp_ppg.get(FuelType.diesel)}
                         onChange={this.onChange}
                         />
