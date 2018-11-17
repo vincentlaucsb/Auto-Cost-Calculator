@@ -12,7 +12,14 @@ class CarData {
 }
 
 export class Car extends CarData {
-    constructor(data: CarData) {
+    constructor(data: CarData = {
+        name: "",
+        price: 0,
+        mpg: 0,
+        insurance: 0,
+        registration: 0,
+        fuelType: FuelType.regular
+    }) {
         super();
         this.name = data.name;
         this.price = data.price;
@@ -174,14 +181,7 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
 
         // Default values for new cars
         this.state = {
-            'car': new Car({
-                'name': null,
-                'mpg': null,
-                'price': 0,
-                'fuelType': FuelType.regular,
-                'insurance': 0,
-                'registration': 0
-            }),
+            'car': new Car(),
             error: false
         };
 
@@ -215,6 +215,9 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
     handleSubmit(event) {
         this.addCar(this.state.car);
         event.preventDefault(); // Stop reloading page
+
+        // Reset car
+        this.setState({ car: new Car() });
     }
 
     fuelOption(type: FuelType) {
