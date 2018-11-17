@@ -46,17 +46,23 @@ export class Car extends CarData {
 interface CarListingProps {
     data: Car;
     removeCar: any; // Fix later
-    hoverOver: any;
-    hoverOut: any;
 }
 
 function CarListing(props: CarListingProps) {
     return (
-        <li className="list-group-item"
-            onMouseEnter={props.hoverOver}
-            onMouseOut={props.hoverOut}
-        >
-            {props.data.name}
+        <li className="car-listing list-group-item" style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'row'
+        }}>
+            <div>
+                <span>{props.data.name}</span>
+                <div className="details">
+                    <span>MPG: {props.data.mpg}</span>
+                    <span>Price: {props.data.price}</span>
+                    <span>Fuel Type: {fuelString(props.data.fuelType)}</span>
+                </div>
+            </div>
             <button
                 type="button"
                 className="btn btn-danger btn-sm"
@@ -75,59 +81,12 @@ interface CarListProps {
     removeCar: any;
 };
 
-export class CarList extends React.Component<CarListProps, {
-    activeCar: Car
-}> {
+export class CarList extends React.Component<CarListProps> {
     constructor(props: CarListProps) {
         super(props);
-
-        this.state = {
-            activeCar: null
-        };
-
-        this.hoverOver = this.hoverOver.bind(this);
-        this.hoverOut = this.hoverOut.bind(this);
-    }
-
-    hoverOver(car, event) {
-        this.setState({
-            activeCar: car
-        });
-    }
-
-    hoverOut(event) {
-        this.setState({
-            activeCar: null
-        });
-
     }
 
     render() {
-        var carInfo =
-            <div className="row">
-                <div className="col-sm">
-                    MPG:
-                </div>
-                <div className="col-sm">
-                    Fuel Type:
-                </div><div className="col-sm">
-                    Price:
-            </div>
-        </div>;
-
-        if (this.state.activeCar) {
-            carInfo = <div className="row">
-                <div className="col-sm">
-                    MPG: {this.state.activeCar.mpg}
-                    </div>
-                <div className="col-sm">
-                    Fuel Type: {fuelString(this.state.activeCar.fuelType)}
-                    </div><div className="col-sm">
-                    Price: ${this.state.activeCar.price}
-                    </div>
-            </div>;
-        }
-
         return <div className="card">
             <div className="card-header">
                 Vehicles
@@ -150,13 +109,9 @@ export class CarList extends React.Component<CarListProps, {
                     </div>
             </div>
             <div className="card-body">
-                {carInfo}
-
                 <ul className="list-group list-group-flush">
                     {this.props.data.map((i) => <CarListing
                         data={i}
-                        hoverOver={this.hoverOver.bind(this, i)}
-                        hoverOut={this.hoverOut}
                         removeCar={this.props.removeCar.bind(this, i.name)} />)}
                 </ul>
             </div>

@@ -76,3 +76,13 @@ $active-panel-color: desaturate(lighten($gunmetal, 10%), 10%);
 .modal {
     color: $gunmetal;
 }
+
+.car-listing .details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 80%;
+
+    span {
+        padding-right: 1em;
+    }
+}
