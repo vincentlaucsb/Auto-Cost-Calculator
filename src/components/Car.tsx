@@ -1,6 +1,7 @@
 ﻿import * as React from "react";
 import { fuelString, FuelType, FuelPrice } from "./Fuel"
 import { Modal } from "./Modal";
+import { MinimizableCard } from "./MinimizableCard";
 
 class CarData {
     name: string;
@@ -87,35 +88,34 @@ export class CarList extends React.Component<CarListProps> {
     }
 
     render() {
-        return <div className="card">
-            <div className="card-header">
-                Vehicles
-                <div style={{float: 'right'}}>
-                    <Modal
-                        title="Add Vehicle"
-                        triggerText="+"
-                        submit={{
-                            buttonName: "Add",
-                            formName: "addCar"
-                        }}
-                        visible={false}>
-                        <CarAdder addCar={this.props.addCar} />
-                    </Modal>
-                    <button
-                        className="btn btn-primary btn-danger"
-                        onClick={this.props.removeAll}>
-                        x
-                    </button>
-                    </div>
+        const header = <div>
+            Vehicles
+            <div style={{ float: 'right' }}>
+                <Modal
+                    title="Add Vehicle"
+                    triggerText="+"
+                    submit={{
+                        buttonName: "Add",
+                        formName: "addCar"
+                    }}
+                    visible={false}>
+                    <CarAdder addCar={this.props.addCar} />
+                </Modal>
+                <button
+                    className="btn btn-primary btn-danger"
+                    onClick={this.props.removeAll}>
+                    x
+                </button>
             </div>
-            <div className="card-body">
-                <ul className="list-group list-group-flush">
-                    {this.props.data.map((i) => <CarListing
-                        data={i}
-                        removeCar={this.props.removeCar.bind(this, i.name)} />)}
-                </ul>
-            </div>
-        </div>
+        </div>;
+
+        return <MinimizableCard header={header}>
+            <ul className="list-group list-group-flush">
+                {this.props.data.map((i) => <CarListing
+                    data={i}
+                    removeCar={this.props.removeCar.bind(this, i.name)} />)}
+            </ul>
+        </MinimizableCard>;
     }
 }
 

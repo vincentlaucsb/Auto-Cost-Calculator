@@ -1,6 +1,7 @@
 ﻿import * as React from "react";
 import { Modal } from "./Modal";
 import { InfoBox } from "./InfoBox";
+import { MinimizableCard } from "./MinimizableCard";
 
 export enum FuelType {
     regular,
@@ -121,20 +122,18 @@ export class GasPriceChanger extends React.Component<
             updateButton = <button
                 className="btn btn-primary disabled" disabled>Update</button>;
 
+        const header = <div>Price of Gas <InfoBox
+            title="Good to Know: Fuel">
+            <p>
+                While there may be benefits to using mid-grade (sometimes labelled "Plus") or premium fuel,
+                most consumer vehicles in the US will run just fine on regular unleaded. Generally speaking,
+                it is best to follow the recommendations in your owner's manual.
+            </p>
+            </InfoBox></div>;
+
         return (
-            <div className="card">
-                <div className="card-header">
-                    Price of Gas <InfoBox
-                        title="Good to Know: Fuel">
-                        <p>
-                            While there may be benefits to using mid-grade (sometimes labelled "Plus") or premium fuel,
-                            most consumer vehicles in the US will run just fine on regular unleaded. Generally speaking,
-                            it is best to follow the recommendations in your owner's manual.
-                        </p>
-                    </InfoBox>
-                </div>
-                <div className="card-body">
-                    <form onSubmit={this.handleSubmit}>
+            <MinimizableCard header={header}>
+                <form onSubmit={this.handleSubmit}>
                     <GasPriceChangerRow
                         id={FuelType.regular}
                         fuelPrice={this.state.temp_ppg.get(FuelType.regular)}
@@ -153,12 +152,11 @@ export class GasPriceChanger extends React.Component<
                         id={FuelType.diesel}
                         fuelPrice={this.state.temp_ppg.get(FuelType.diesel)}
                         onChange={this.onChange}
-                        />
+                    />
 
                     {updateButton}
-                    </form>
-                    </div>
-            </div>
+                </form>
+            </MinimizableCard>
         );
     }
 }
