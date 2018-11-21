@@ -5,6 +5,8 @@ import { MileageChanger, MonthChanger } from "./GraphControls";
 import { Tabs } from "./Tabs";
 import { Table } from "./Table";
 import { Car, CarList } from "./Car";
+import { MultiModal } from "./MultiModal";
+
 declare var c3: any;
 declare var d3: any;
 
@@ -189,6 +191,9 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             "Chart", "Table"
         ];
 
+        const multiModal = new MultiModal({});
+        multiModal.create(<p>Test</p>);
+
         let body;
         
         if (this.state.activeTab == "Chart") {
@@ -225,6 +230,9 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         return <div className="container-fluid">
             <h1>Automobile Cost Calculator</h1>
 
+            {multiModal.render()}
+            {multiModal.getTrigger(0)}
+
             <div className="row">
                 <div className="col">
                     <div className="card" id="graph-panel">
@@ -244,7 +252,9 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                     <CarList data={this.state.data}
                         addCar={this.addCar}
                         removeAll={this.removeAll}
-                        removeCar={this.removeCar} />
+                        removeCar={this.removeCar}
+                        multiModal={multiModal}
+                    />
                 </div>
             </div>
         </div>

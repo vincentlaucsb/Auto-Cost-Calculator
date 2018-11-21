@@ -11,6 +11,10 @@ body {
     color: $white;
 }
 
+a[role='button'] {
+    cursor: pointer;
+}
+
 .card {
     background: $khaki;
     color: $smoky-black;

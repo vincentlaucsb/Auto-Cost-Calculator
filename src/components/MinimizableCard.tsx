@@ -1,5 +1,27 @@
 ﻿import * as React from "react";
 
+interface MinimizeTriggerProps {
+    onClick: any;
+    minimized: boolean;
+}
+
+class MinimizeTrigger extends React.Component<MinimizeTriggerProps> {
+    render() {
+        var text = '[-]';
+        if (this.props.minimized) {
+            text = '[+]';
+        }
+
+        return <a
+            role='button'
+            onClick={this.props.onClick}
+            style={{float: 'left'}}>
+            {text}
+        </a>;
+        
+    }
+}
+
 interface CardProps {
     header: any;
     children: any;
@@ -37,11 +59,7 @@ export class MinimizableCard extends React.Component<CardProps, {
 
         return <div className="card">
             <div className="card-header">
-                <button
-                    className="btn btn-primary"
-                    onClick={this.minimize}>
-                    Minimize
-                </button>
+                <MinimizeTrigger onClick={this.minimize} minimized={minimized} />
 
                 {this.props.header}
             </div>

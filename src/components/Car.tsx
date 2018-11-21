@@ -80,6 +80,7 @@ interface CarListProps {
     addCar: any; // fix later
     removeAll: any;
     removeCar: any;
+    multiModal: any;
 };
 
 export class CarList extends React.Component<CarListProps> {
@@ -88,9 +89,8 @@ export class CarList extends React.Component<CarListProps> {
     }
 
     render() {
-        const header = <div>
-            Vehicles
-            <div style={{ float: 'right' }}>
+        /**
+         *
                 <Modal
                     title="Add Vehicle"
                     triggerText="+"
@@ -101,6 +101,15 @@ export class CarList extends React.Component<CarListProps> {
                     visible={false}>
                     <CarAdder addCar={this.props.addCar} />
                 </Modal>
+         * 
+         */
+
+        const header = <div>
+            Vehicles
+            <div style={{ float: 'right' }}>
+                {this.props.multiModal.create(
+                    <CarAdder addCar={this.props.addCar} />
+                )}
                 <button
                     className="btn btn-primary btn-danger"
                     onClick={this.props.removeAll}>
