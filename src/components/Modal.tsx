@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import * as ReactModal from "react-modal";
-import { Button } from "./Buttons";
+import { Button, PrimaryButton } from "./Buttons";
 
 interface ModalProps {
     submit?: {
@@ -22,80 +22,61 @@ export class Modal extends React.Component<ModalProps, ModalState> {
     constructor(props: ModalProps) {
         super(props);
 
-        if ('visible' in this.props) {
-            this.state = { 'visible': this.props.visible };
-        } else {
-            this.state = { 'visible': false };
-        }
+        this.state = {
+            'visible': ('visible' in this.props) ? this.props.visible : false
+        };
 
         this.toggle = this.toggle.bind(this);
     }
 
     toggle() {
-        console.log('toggling');
-        console.log(this.state);
         this.setState({
             'visible': !this.state['visible']
         });
     }
 
     render() {
-        var submit;
-        if (this.props.submit) {
-            submit = <button
+        let submit = this.props.submit ? <PrimaryButton
                 type="submit"
-                className="btn btn-primary"
                 form={this.props.submit.formName}>
                 {this.props.submit.buttonName}
-            </button>
-        }
+            </PrimaryButton> : null;
 
-        var triggerButton;
-        if (!this.props.hideTrigger) {
-            triggerButton = <button className="btn btn-primary" onClick={this.toggle}>
+        let triggerButton = this.props.hideTrigger ? null :
+            <PrimaryButton onClick={this.toggle}>
                 {this.props.triggerText}
-            </button>;
-        }
+            </PrimaryButton>;
 
         let modalDisplay = {
-            display: 'none'
+            display: this.state.visible? 'block' : 'none'
         };
-
-        if (this.state.visible) {
-            modalDisplay = {
-                display: 'block'
-            };
-        }
 
         return (
             <React.Fragment>
                 <div className="modal" style={modalDisplay}
                         tabIndex={-1} role="dialog">
                     <div className="modal-dialog" role="document">
-                    <div className="modal-content">
-                    <div className="modal-header">
-                    <h5 className="modal-title">{this.props.title}</h5>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{this.props.title}</h5>
                            
-                    <button type="button" className="close"
-                        onClick={this.toggle}
-                        data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                            
+                                <button type="button" className="close"
+                                    onClick={this.toggle}
+                                    data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                {this.props.children}
+                            </div>
+                            <div className="modal-footer">
+                                {submit}
+                                <Button className="btn-secondary" onClick={this.toggle}
+                                    data-dismiss="modal">Close</Button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="modal-body">
-                    {this.props.children}
-                    </div>
-                    <div className="modal-footer">
-                        {submit}
-                        <button type="button" onClick={this.toggle}
-                            className="btn btn-secondary" data-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
-                    </div>
-                    </div>
-                    </div>
+                 </div>
                 {triggerButton}
             </React.Fragment>);
     }   

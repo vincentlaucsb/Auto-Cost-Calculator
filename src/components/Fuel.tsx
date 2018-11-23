@@ -1,6 +1,7 @@
 ﻿import * as React from "react";
 import { Modal } from "./Modal";
 import { MinimizableCard } from "./MinimizableCard";
+import { DisabledButton, PrimaryButton } from "./Buttons";
 
 export enum FuelType {
     regular,
@@ -112,14 +113,9 @@ export class GasPriceChanger extends React.Component<
     }
 
     render() {
-        let updateButton;
-        if (this.state.updateable)
-            updateButton = <button
-                type="submit"
-                className="btn btn-primary">Update</button>;
-        else
-            updateButton = <button
-                className="btn btn-primary disabled" disabled>Update</button>;
+        let updateButton = this.state.updateable ?
+            <PrimaryButton>Update</PrimaryButton> :
+            <DisabledButton>Update</DisabledButton>;
 
         const header = <div>Price of Gas <Modal
             title="Good to Know: Fuel"
