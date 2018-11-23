@@ -1,6 +1,5 @@
 ﻿import * as React from "react";
 import { Modal } from "./Modal";
-import { InfoBox } from "./InfoBox";
 import { MinimizableCard } from "./MinimizableCard";
 
 export enum FuelType {
@@ -122,14 +121,15 @@ export class GasPriceChanger extends React.Component<
             updateButton = <button
                 className="btn btn-primary disabled" disabled>Update</button>;
 
-        const header = <div>Price of Gas <InfoBox
-            title="Good to Know: Fuel">
+        const header = <div>Price of Gas <Modal
+            title="Good to Know: Fuel"
+            triggerText="?">
             <p>
                 While there may be benefits to using mid-grade (sometimes labelled "Plus") or premium fuel,
                 most consumer vehicles in the US will run just fine on regular unleaded. Generally speaking,
                 it is best to follow the recommendations in your owner's manual.
             </p>
-            </InfoBox></div>;
+            </Modal></div>;
 
         return (
             <MinimizableCard header={header}>
