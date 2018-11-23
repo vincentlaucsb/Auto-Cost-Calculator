@@ -34,10 +34,16 @@ a[role='button'] {
     }
 }
 
+// Spacing Between Adjacent Items
 .card + .card {
     margin-top: 1em;
 }
 
+button + button {
+    margin-left: 0.2em;
+}
+
+// Graph Panel
 $active-panel-color: desaturate(lighten($gunmetal, 10%), 10%);
 
 #graph-panel {

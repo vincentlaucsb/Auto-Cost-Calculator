@@ -1,9 +1,11 @@
 import * as React from "react";
 
-export function Button(props) {
-    return <button type="button" className="btn" {...props} />
+export function Button({ className="", ...props }) {
+    let classNames = ["btn", className].join(" ");
+    return <button type="button" className={classNames} {...props} />
 }
 
-export function DangerButton(props) {
-    return <Button className="btn btn-danger" {...props} />
+export function DangerButton({ className="", ...props }) {
+    let classNames = ["btn-danger", className].join(" ");
+    return <Button className={classNames} {...props} />
 }

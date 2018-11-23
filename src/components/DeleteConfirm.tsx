@@ -28,10 +28,10 @@ export class DeleteConfirm extends React.Component<{ delete: any }, { confirm: b
 
     render() {
         if (this.state.confirm) {
-            return <DangerButton className="btn-sm" style={{ float: 'right' }}
+            return <DangerButton style={{ float: 'right' }}
                 onClick={this.delete}>Confirm</DangerButton>
         } else {
-            return <DangerButton className="btn-sm" style={{ float: 'right' }}
+            return <DangerButton style={{ float: 'right' }}
                 onClick={this.toggle}>x</DangerButton>
         }
     }
