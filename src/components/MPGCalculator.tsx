@@ -5,6 +5,8 @@ import { MileageChanger, MonthChanger } from "./GraphControls";
 import { Tabs } from "./Tabs";
 import { Table } from "./Table";
 import { Car, CarList } from "./Car";
+import { Modal } from "./Modal";
+
 declare var c3: any;
 declare var d3: any;
 
@@ -90,9 +92,12 @@ export interface MpgCalculatorState {
     months: number;
     annualMileage: number;
     activeTab: string;
+    modalsVisible: Map<string, boolean>;
 };
 
 export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalculatorState> {
+    modalRef: any;
+
     constructor(props: MpgCalculatorProps) {
         super(props);
 
@@ -102,13 +107,18 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             [FuelType.premium, 3.4],
             [FuelType.diesel, 3.18]
         ]);
+
+        let temp_modals_visible: Map<string, boolean> = new Map([
+            ['carAdder', false]
+        ]);
         
         this.state = {
             data: props.data,
             ppg: temp_ppg,
             months: 48,
             annualMileage: 12000,
-            activeTab: "Chart"
+            activeTab: "Chart",
+            modalsVisible: temp_modals_visible
         };
 
         this.updateGasPrice = this.updateGasPrice.bind(this);
@@ -244,7 +254,8 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                     <CarList data={this.state.data}
                         addCar={this.addCar}
                         removeAll={this.removeAll}
-                        removeCar={this.removeCar} />
+                        removeCar={this.removeCar}
+                    />
                 </div>
             </div>
         </div>

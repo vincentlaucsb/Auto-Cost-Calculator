@@ -1,7 +1,9 @@
 ﻿import * as React from "react";
+import { Button, DangerButton } from "./Buttons";
 import { fuelString, FuelType, FuelPrice } from "./Fuel"
 import { Modal } from "./Modal";
 import { MinimizableCard } from "./MinimizableCard";
+import { DeleteConfirm } from "./DeleteConfirm";
 
 class CarData {
     name: string;
@@ -64,22 +66,16 @@ function CarListing(props: CarListingProps) {
                     <span>Fuel Type: {fuelString(props.data.fuelType)}</span>
                 </div>
             </div>
-            <button
-                type="button"
-                className="btn btn-danger btn-sm"
-                style={{
-                    float: 'right'
-                }}
-                onClick={props.removeCar}>x</button>
+            <DeleteConfirm delete={props.removeCar}></DeleteConfirm>
         </li>
     );
 }
 
 interface CarListProps {
     data: Array<Car>;
-    addCar: any; // fix later
-    removeAll: any;
-    removeCar: any;
+    addCar: (data: Car) => boolean;
+    removeAll: () => void;
+    removeCar: (car: String) => void;
 };
 
 export class CarList extends React.Component<CarListProps> {
@@ -91,21 +87,13 @@ export class CarList extends React.Component<CarListProps> {
         const header = <div>
             Vehicles
             <div style={{ float: 'right' }}>
-                <Modal
-                    title="Add Vehicle"
-                    triggerText="+"
-                    submit={{
-                        buttonName: "Add",
-                        formName: "addCar"
-                    }}
-                    visible={false}>
+                <Modal submit={{
+                    buttonName: "Add",
+                    formName: "addCar"
+                }} triggerText="+" title="Add Vehicle">
                     <CarAdder addCar={this.props.addCar} />
                 </Modal>
-                <button
-                    className="btn btn-primary btn-danger"
-                    onClick={this.props.removeAll}>
-                    x
-                </button>
+                <DeleteConfirm delete={this.props.removeAll} />
             </div>
         </div>;
 
@@ -119,19 +107,15 @@ export class CarList extends React.Component<CarListProps> {
     }
 }
 
-interface CarAdderProps {
-    addCar: any; // fix later
-}
-
 interface CarAdderState {
     car: Car;
     error: boolean;
 }
 
-class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
+class CarAdder extends React.Component<{ addCar: (data: Car) => boolean}, CarAdderState> {
     // Form used for adding new cars
 
-    constructor(props: CarAdderProps) {
+    constructor(props) {
         super(props);
 
         // Default values for new cars
@@ -155,7 +139,7 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
 
     handleChange(event) {
         // Update state to reflect input values
-        let temp: Car = this.state.car;
+        let temp = this.state.car;
         let new_value: any = event.target.value;
 
         // TODO: Might want to revise second condition
@@ -171,7 +155,7 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
         this.addCar(this.state.car);
         event.preventDefault(); // Stop reloading page
 
-        // Reset car
+        // Reset car (but only if non-errored)
         this.setState({ car: new Car() });
     }
 
@@ -183,7 +167,7 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
         var errorMessage;
 
         if (this.state.error) {
-             errorMessage = <p>Car with the same name already exists.</p>;
+            errorMessage = <p>Car with the same name already exists.</p>;
         }
 
         return <form onSubmit={this.handleSubmit} id="addCar">
@@ -209,7 +193,7 @@ class CarAdder extends React.Component<CarAdderProps, CarAdderState> {
 
                 <div className="form-group">
                     <label>MPG
-                    <input className="form-control" type="number" min="0" name="MPG" id="mpg" onChange={this.handleChange} required />
+                    <input className="form-control" type="number" name="MPG" id="mpg" onChange={this.handleChange} required />
                     </label>
                 </div>
             </div>

@@ -18,6 +18,7 @@ export class TabItem extends React.Component<TabItemProps> {
         return <li className="nav-item">
             <a
                 className={className}
+                role="button"
                 onClick={this.props.setActive}
                 data-name={this.props.name}
             >{this.props.name}</a>
