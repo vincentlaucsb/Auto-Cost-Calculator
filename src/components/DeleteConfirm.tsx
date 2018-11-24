@@ -1,7 +1,13 @@
 ﻿import * as React from "react";
 import { DangerButton } from "./Buttons";
 
-export class DeleteConfirm extends React.Component<{ delete: any }, { confirm: boolean }> {
+interface DeleteConfirmProps {
+    text?: string;
+    className?: string;
+    delete: (param?: any) => void;
+}
+
+export class DeleteConfirm extends React.Component<DeleteConfirmProps, { confirm: boolean }> {
     /*
      * Delete button which changes to a confirm prompt before
      * finally doing the deed
@@ -27,10 +33,12 @@ export class DeleteConfirm extends React.Component<{ delete: any }, { confirm: b
     }
 
     render() {
+        const text = ('text' in this.props) ? this.props.text : 'x';
+
         return this.state.confirm ?
-            <DangerButton style={{ float: 'right' }}
+            <DangerButton className={this.props.className}
                 onClick={this.delete}>Confirm</DangerButton> :
-            <DangerButton style={{ float: 'right' }}
-                onClick={this.toggle}>x</DangerButton>;
+            <DangerButton className={this.props.className}
+                onClick={this.toggle}>{text}</DangerButton>;
     }
 }

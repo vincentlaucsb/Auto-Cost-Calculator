@@ -87,12 +87,18 @@ $active-panel-color: desaturate(lighten($gunmetal, 10%), 10%);
     color: $gunmetal;
 }
 
-.car-listing .details {
-    display: flex;
-    justify-content: space-between;
-    font-size: 80%;
+.car-listing {
+    .btn-danger {
+        margin-left: 0.5em;
+    }
 
-    span {
-        padding-right: 1em;
+    .details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 80%;
+
+        span {
+            padding-right: 1em;
+        }
     }
 }
