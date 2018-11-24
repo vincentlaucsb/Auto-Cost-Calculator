@@ -6,6 +6,7 @@ import { Tabs } from "./Tabs";
 import { Table } from "./Table";
 import { Car, CarList } from "./Car";
 import { Modal } from "./Modal";
+import * as GridLayout from 'react-grid-layout';
 
 declare var c3: any;
 declare var d3: any;
@@ -232,11 +233,19 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             />;
         }
 
+
+        // Grid
+        var layout = [
+            { i: 'a', x: 0, y: 0, w: 20, h: 2 },
+            { i: 'b', x: 20, y: 0, w: 10, h: 5 },
+            { i: 'c', x: 20, y: 5, w: 10, h: 10 }
+        ];
+
         return <div className="container-fluid">
             <h1>Automobile Cost Calculator</h1>
 
-            <div className="row">
-                <div className="col">
+            <GridLayout className="layout" layout={layout} cols={30} rowHeight={30} width={1200}>
+                <div key="a">
                     <div className="card" id="graph-panel">
                         <div className="card-header">
                             <Tabs items={tabItems}
@@ -249,15 +258,17 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                         </div>
                     </div>
                 </div>
-                <div className="col-4">
+                <div key="b">
                     <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
+                </div>
+                <div key="c">
                     <CarList data={this.state.data}
                         addCar={this.addCar}
                         removeAll={this.removeAll}
                         removeCar={this.removeCar}
                     />
                 </div>
-            </div>
+            </GridLayout>
         </div>
     }
 }

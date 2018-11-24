@@ -11,7 +11,7 @@ export function PrimaryButton({ className = "", ...props }) {
 }
 
 export function DisabledButton({ className = "", ...props }) {
-    let classNames = ["btn-disabled", className].join(" ");
+    let classNames = ["btn-primary btn-disabled", className].join(" ");
     return <Button className={classNames} {...props} disabled />
 }
 

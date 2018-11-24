@@ -114,7 +114,7 @@ export class GasPriceChanger extends React.Component<
 
     render() {
         let updateButton = this.state.updateable ?
-            <PrimaryButton>Update</PrimaryButton> :
+            <PrimaryButton type="submit">Update</PrimaryButton> :
             <DisabledButton>Update</DisabledButton>;
 
         const header = <div>Price of Gas <Modal
