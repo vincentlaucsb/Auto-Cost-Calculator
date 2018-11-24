@@ -1,118 +1,14 @@
-﻿import * as React from "react";
-import { Button, DangerButton } from "./Buttons";
-import { fuelString, FuelType, FuelPrice } from "./Fuel"
-import { Modal } from "./Modal";
-import { MinimizableCard } from "./MinimizableCard";
-import { DeleteConfirm } from "./DeleteConfirm";
+import * as React from "react";
+import { Car } from "./Car";
+import { fuelString, FuelType, FuelPrice } from "../Fuel"
 
-class CarData {
-    name: string;
-    price: number;
-    mpg: number;
-    insurance: number;    // per month
-    registration: number; // per ?
-    fuelType: FuelType;
-}
-
-export class Car extends CarData {
-    constructor(data: CarData = {
-        name: "",
-        price: 0,
-        mpg: 0,
-        insurance: 0,
-        registration: 0,
-        fuelType: FuelType.regular
-    }) {
-        super();
-        this.name = data.name;
-        this.price = data.price;
-        this.mpg = data.mpg;
-        this.insurance = data.insurance;
-        this.registration = data.registration;
-        this.fuelType = data.fuelType;
-    }
-
-    costToDriveMonth(monthlyMileage: number, months: number, ppg: FuelPrice): number {
-        // Calculate the total cost to drive a car x months
-        const miles = months * monthlyMileage;
-        return this.price +
-            (this.insurance * months) +
-            this.costToDriveGasOnly(miles, ppg);
-    }
-
-    costToDriveGasOnly(miles: number, ppg: FuelPrice): number {
-        // Calculate the cost to drive a car (gas only)
-        return (miles / this.mpg) * ppg.get(this.fuelType);
-    }
-}
-
-interface CarListingProps {
-    data: Car;
-    removeCar: any; // Fix later
-}
-
-function CarListing(props: CarListingProps) {
-    return (
-        <li className="car-listing list-group-item" style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: 'row'
-        }}>
-            <div>
-                <span>{props.data.name}</span>
-                <div className="details">
-                    <span>MPG: {props.data.mpg}</span>
-                    <span>Price: {props.data.price}</span>
-                    <span>Fuel Type: {fuelString(props.data.fuelType)}</span>
-                </div>
-            </div>
-            <DeleteConfirm delete={props.removeCar}></DeleteConfirm>
-        </li>
-    );
-}
-
-interface CarListProps {
-    data: Array<Car>;
-    addCar: (data: Car) => boolean;
-    removeAll: () => void;
-    removeCar: (car: String) => void;
-};
-
-export class CarList extends React.Component<CarListProps> {
-    constructor(props: CarListProps) {
-        super(props);
-    }
-
-    render() {
-        const header = <div>
-            Vehicles
-            <div style={{ float: 'right' }}>
-                <Modal submit={{
-                    buttonName: "Add",
-                    formName: "addCar"
-                }} triggerText="+" title="Add Vehicle">
-                    <CarAdder addCar={this.props.addCar} />
-                </Modal>
-                <DeleteConfirm delete={this.props.removeAll} />
-            </div>
-        </div>;
-
-        return <MinimizableCard header={header}>
-            <ul className="list-group list-group-flush">
-                {this.props.data.map((i) => <CarListing
-                    data={i}
-                    removeCar={this.props.removeCar.bind(this, i.name)} />)}
-            </ul>
-        </MinimizableCard>;
-    }
-}
-
-interface CarAdderState {
+interface AdderState {
     car: Car;
     error: boolean;
 }
 
-class CarAdder extends React.Component<{ addCar: (data: Car) => boolean}, CarAdderState> {
+export class Adder extends React.Component<
+    { addCar: (data: Car) => boolean }, AdderState> {
     // Form used for adding new cars
 
     constructor(props) {

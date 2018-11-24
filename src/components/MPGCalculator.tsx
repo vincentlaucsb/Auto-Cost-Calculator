@@ -1,11 +1,17 @@
 import * as React from "react";
+import { ModalContainer, Modal } from "./Modal";
+import { Responsive, WidthProvider } from 'react-grid-layout';
+
 import * as Helpers from "./helpers";
 import { FuelType, FuelPrice, GasPriceChanger } from "./Fuel";
 import { MileageChanger, MonthChanger } from "./GraphControls";
 import { Tabs } from "./Tabs";
-import { Table } from "./Table";
-import { Car, CarList } from "./Car";
-import { Modal } from "./Modal";
+
+import { Table } from "./Car/Table";
+import { Car } from "./Car/Car";
+import { List as CarList } from "./Car/List";
+
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 declare var c3: any;
 declare var d3: any;
@@ -81,12 +87,11 @@ class Graph extends React.Component<GraphProps> {
     }
 }
 
-// Overall controller for all other components
-export interface MpgCalculatorProps {
+interface MpgCalculatorProps {
     data: Array<Car>;
 };
 
-export interface MpgCalculatorState {
+interface MpgCalculatorState {
     data: Array<Car>;
     ppg: FuelPrice;
     months: number;
@@ -232,32 +237,69 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             />;
         }
 
-        return <div className="container-fluid">
-            <h1>Automobile Cost Calculator</h1>
 
-            <div className="row">
-                <div className="col">
-                    <div className="card" id="graph-panel">
-                        <div className="card-header">
-                            <Tabs items={tabItems}
-                                activeItem={this.state.activeTab}
-                                setActive={this.setActive}
-                            />
-                        </div>
-                        <div className="card-body">
-                            {body}
+        // Grid
+        var layouts = {
+            lg: [
+                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
+                { i: 'b', x: 20, y: 0, w: 10, h: 3 },
+                { i: 'c', x: 20, y: 3, w: 10, h: 10 }
+            ],
+            md: [
+                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
+                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
+                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
+            ],
+            sm: [
+                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
+                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
+                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
+            ],
+            xs: [
+                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
+                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
+                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
+            ],
+            xxs: [
+                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
+                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
+                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
+            ]
+        };
+
+        return <React.Fragment>
+            <ModalContainer />
+            <div className="container-fluid">
+                <h1>Automobile Cost Calculator</h1>
+
+                <ResponsiveReactGridLayout className="layout" layouts={layouts}
+                    breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                    cols={{ lg: 30, md: 30, sm: 6, xs: 4, xxs: 2 }}>
+                    <div key="a">
+                        <div className="card" id="graph-panel">
+                            <div className="card-header">
+                                <Tabs items={tabItems}
+                                    activeItem={this.state.activeTab}
+                                    setActive={this.setActive}
+                                />
+                            </div>
+                            <div className="card-body">
+                                {body}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="col-4">
-                    <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
-                    <CarList data={this.state.data}
-                        addCar={this.addCar}
-                        removeAll={this.removeAll}
-                        removeCar={this.removeCar}
-                    />
-                </div>
+                    <div key="b">
+                        <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
+                    </div>
+                    <div key="c">
+                        <CarList data={this.state.data}
+                            addCar={this.addCar}
+                            removeAll={this.removeAll}
+                            removeCar={this.removeCar}
+                        />
+                    </div>
+                </ResponsiveReactGridLayout>
             </div>
-        </div>
+            </React.Fragment>
     }
 }

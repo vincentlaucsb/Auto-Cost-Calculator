@@ -1,7 +1,7 @@
 ﻿import * as React from "react";
-import { FuelPrice } from "./Fuel";
+import { FuelPrice } from "../Fuel";
+import { money } from "../helpers";
 import { Car } from "./Car";
-import { money } from "./helpers";
 
 interface TableProps {
     months: number;

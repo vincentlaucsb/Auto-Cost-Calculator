@@ -22,12 +22,12 @@ class MinimizeTrigger extends React.Component<MinimizeTriggerProps> {
     }
 }
 
-interface CardProps {
-    header: any;
-    children: any;
+interface MinimizableCardProps {
+    title: string;
+    children: JSX.Element;
 }
 
-export class MinimizableCard extends React.Component<CardProps, {
+export class MinimizableCard extends React.Component<MinimizableCardProps, {
     minimized: boolean
 }> {
     // A card that can be minimized
@@ -60,8 +60,7 @@ export class MinimizableCard extends React.Component<CardProps, {
         return <div className="card">
             <div className="card-header">
                 <MinimizeTrigger onClick={this.minimize} minimized={minimized} />
-
-                {this.props.header}
+                { this.props.title }
             </div>
 
             {children}

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { MpgCalculator } from "./components/MPGCalculator"
-import { Car } from "./components/Car"
+import { Car } from "./components/car/Car"
 import { FuelType } from "./components/Fuel"
 
 let cars: Array<Car> = [

@@ -113,11 +113,11 @@ export class GasPriceChanger extends React.Component<
     }
 
     render() {
-        let updateButton = this.state.updateable ?
-            <PrimaryButton>Update</PrimaryButton> :
+        const updateButton = this.state.updateable ?
+            <PrimaryButton type="submit">Update</PrimaryButton> :
             <DisabledButton>Update</DisabledButton>;
 
-        const header = <div>Price of Gas <Modal
+        const infoBox = <Modal
             title="Good to Know: Fuel"
             triggerText="?">
             <p>
@@ -125,10 +125,10 @@ export class GasPriceChanger extends React.Component<
                 most consumer vehicles in the US will run just fine on regular unleaded. Generally speaking,
                 it is best to follow the recommendations in your owner's manual.
             </p>
-            </Modal></div>;
+        </Modal>;
 
         return (
-            <MinimizableCard header={header}>
+            <MinimizableCard title="Price of Gas">
                 <form onSubmit={this.handleSubmit}>
                     <GasPriceChangerRow
                         id={FuelType.regular}
@@ -150,7 +150,7 @@ export class GasPriceChanger extends React.Component<
                         onChange={this.onChange}
                     />
 
-                    {updateButton}
+                    {updateButton} {infoBox}
                 </form>
             </MinimizableCard>
         );
