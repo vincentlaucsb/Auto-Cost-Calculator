@@ -9,7 +9,7 @@ import { Tabs } from "./Tabs";
 
 import { Table } from "./Car/Table";
 import { Car } from "./Car/Car";
-import { List as CarList } from "./Car/List";
+import { CarList as CarList } from "./Car/List";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -274,7 +274,9 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
 
                 <ResponsiveReactGridLayout className="layout" layouts={layouts}
                     breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                    cols={{ lg: 30, md: 30, sm: 6, xs: 4, xxs: 2 }}>
+                    cols={{ lg: 30, md: 30, sm: 6, xs: 4, xxs: 2 }}
+                    isDraggable={false}
+                >
                     <div key="a">
                         <div className="card" id="graph-panel">
                             <div className="card-header">
