@@ -5,12 +5,13 @@ import { CarListing } from "./CarListing";
 import { Modal } from "../Modal";
 import { MinimizableCard } from "../MinimizableCard";
 import { DeleteConfirm } from "../DeleteConfirm";
+import { CarDatabase } from "../CarDatabase";
 
 interface ListProps {
-    data: Array<Car>;
-    addCar: (data: Car) => boolean;
+    data: CarDatabase;
+    addCar: (data: Car) => void;
     removeAll: () => void;
-    removeCar: (car: String) => void;
+    removeCar: (car: number) => void;
 };
 
 // A list of vehicles
@@ -34,9 +35,9 @@ export class CarList extends React.Component<ListProps> {
             <React.Fragment>
                 {controls}
                 <ul className="list-group list-group-flush">
-                    {this.props.data.map((i) => <CarListing
+                    {this.props.data.toArray().map((i) => <CarListing
                         data={i}
-                        removeCar={this.props.removeCar.bind(this, i.name)} />)}
+                        removeCar={this.props.removeCar.bind(this, i.id)} />)}
                 </ul>
             </React.Fragment>
         </MinimizableCard>;

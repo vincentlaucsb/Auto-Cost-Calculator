@@ -2,12 +2,13 @@
 import { FuelPrice } from "../Fuel";
 import { money } from "../helpers";
 import { Car } from "./Car";
+import { CarDatabase } from "../CarDatabase";
 
 interface TableProps {
     months: number;
     annualMileage: number;
     ppg: FuelPrice;
-    data: Array<Car>;
+    data: CarDatabase;
 }
 
 export class Table extends React.Component<TableProps> {
@@ -29,7 +30,7 @@ export class Table extends React.Component<TableProps> {
                 </tr>
             </thead>
             <tbody>
-            {this.props.data.map((i) =>
+                {this.props.data.toArray().map((i) =>
                 <tr>
                     <td>{i.name}</td>
                     <td>{money(i.costToDriveGasOnly(10, ppg))}</td>

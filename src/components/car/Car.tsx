@@ -5,6 +5,7 @@ import { MinimizableCard } from "../MinimizableCard";
 import { DeleteConfirm } from "../DeleteConfirm";
 
 class CarData {
+    id: number;
     name: string;
     price: number;
     mpg: number;
@@ -15,6 +16,7 @@ class CarData {
 
 export class Car extends CarData {
     constructor(data: CarData = {
+        id: -1,
         name: "",
         price: 0,
         mpg: 0,

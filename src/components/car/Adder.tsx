@@ -8,7 +8,7 @@ interface AdderState {
 }
 
 export class Adder extends React.Component<
-    { addCar: (data: Car) => boolean }, AdderState> {
+    { addCar: (data: Car) => void }, AdderState> {
     // Form used for adding new cars
 
     constructor(props) {
@@ -27,10 +27,7 @@ export class Adder extends React.Component<
 
     addCar(state) {
         // Add new car
-        if (!this.props.addCar(state)) {
-            // Display error message if car with the same name already exists
-            this.setState({ error: true });
-        }
+        this.props.addCar(state);
     }
 
     handleChange(event) {

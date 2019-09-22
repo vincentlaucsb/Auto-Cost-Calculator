@@ -5,7 +5,8 @@
         "noImplicitAny": false,
         "module": "commonjs",
         "allowJs": true,
-        "experimentalDecorators": true
+      "experimentalDecorators": true,
+      "downlevelIteration": true,
         "target": "es5",
         "lib": ["es5", "es6", "dom"],
         "types": ["prop-types", "react", "react-dom"],

@@ -8,6 +8,7 @@ import { MileageChanger, MonthChanger } from "./GraphControls";
 import { Tabs } from "./Tabs";
 
 import { Table } from "./Car/Table";
+import { CarDatabase } from "./CarDatabase";
 import { Car } from "./Car/Car";
 import { CarList as CarList } from "./Car/List";
 
@@ -20,7 +21,7 @@ interface GraphProps {
     months: number;
     annualMileage: number;
     ppg: FuelPrice;
-    data: Array<Car>;
+    data: CarDatabase;
 }
 
 interface GraphData {
@@ -51,7 +52,7 @@ class Graph extends React.Component<GraphProps> {
         });
     }
     
-    makeData(data: Array<Car>) {
+    makeData(data: CarDatabase) {
         // Process car data and generate cost of ownership
         let graphData: GraphData = {
             x: 'x', // Mile increments
@@ -60,9 +61,10 @@ class Graph extends React.Component<GraphProps> {
                     Helpers.range(0, this.props.months)),
             ]
         };
-        
-        for (var i in data) {
-            const car = data[i];
+
+        var cars = data.toArray();
+        for (var i in cars) {
+            const car = cars[i];
             const monthlyMileage = this.props.annualMileage / 12;
 
             let cost: Array<any> = [
@@ -88,11 +90,11 @@ class Graph extends React.Component<GraphProps> {
 }
 
 interface MpgCalculatorProps {
-    data: Array<Car>;
+    data: CarDatabase;
 };
 
 interface MpgCalculatorState {
-    data: Array<Car>;
+    data: CarDatabase;
     ppg: FuelPrice;
     months: number;
     annualMileage: number;
@@ -152,45 +154,23 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             months: _months
         });
     }
-    
+
+    // Add car listing
     addCar(data: Car) {
-        // Add car listing
-        // Returns false if car with same name already exists
-
-        for (let i in this.state.data) {
-            if (this.state.data[i].name == data.name) {
-                return false;
-            }
-        }
-
-        var temp = this.state.data;
-        temp.push(data);
-        
-        this.setState({
-            data: temp
-        });
-
-        return true;
+        this.state.data.addCar(data);
+        this.setState({ data: this.state.data });
     }
 
+    // Remove all car listings
     removeAll() {
-        // Remove all car listings
-        this.setState({ data: [] });
+        this.state.data.removeAll();
+        this.setState({ data: this.state.data });
     }
 
-    removeCar(name: string) {
-        // Remove car listings by name
-        var temp = [];
-        
-        for (var j in this.state.data) {
-            if (name != this.state.data[j].name) {
-                temp.push(this.state.data[j]);
-            }
-        }
-
-        this.setState({
-            data: temp
-        });
+    // Remove an individual car
+    removeCar(id: number) {
+        this.state.data.removeCar(id);
+        this.setState({ data: this.state.data });
     }
 
     setActive(name: string) {
