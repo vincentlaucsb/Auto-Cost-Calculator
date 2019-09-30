@@ -24,6 +24,9 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
         };
 
         this.updateMpg = this.updateMpg.bind(this);
+        this.updatePrice = this.updatePrice.bind(this);
+        this.updateRegistration = this.updateRegistration.bind(this);
+        this.updateInsurance = this.updateInsurance.bind(this);
         this.makeEditable = this.makeEditable.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -47,6 +50,33 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
         });
     }
 
+    updatePrice(event) {
+        let newCarData = this.state.carData;
+        newCarData.price = event.target.value;
+
+        this.setState({
+            carData: newCarData
+        });
+    }
+
+    updateInsurance(event) {
+        let newCarData = this.state.carData;
+        newCarData.insurance = event.target.value;
+
+        this.setState({
+            carData: newCarData
+        });
+    }
+
+    updateRegistration(event) {
+        let newCarData = this.state.carData;
+        newCarData.registration = event.target.value;
+
+        this.setState({
+            carData: newCarData
+        });
+    }
+
     render() {
         var details = <div className="details">
             <span>MPG: {this.state.carData.mpg}</span>
@@ -61,10 +91,10 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
         if (this.state.isEditable) {
             details = <div className="details">
                 <span>MPG: <input name="mpg" value={this.state.carData.mpg} onChange={this.updateMpg}></input></span>
-                <span>Price: <input value={this.state.carData.price}></input></span>
+                <span>Price: <input name="price" value={this.state.carData.price} onChange={this.updatePrice}></input></span>
                 <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>
-                <span>Insurance: <input value={this.state.carData.insurance}></input></span>
-                <span>Registration: <input value={this.state.carData.registration}></input></span>
+                <span>Insurance: <input name="insurance" value={this.state.carData.insurance} onChange={this.updateInsurance}></input></span>
+                <span>Registration: <input name="registration" value={this.state.carData.registration} onChange={this.updateRegistration}></input></span>
             </div>
 
             editButton = <Button onClick={this.handleSubmit}>Update</Button>;
