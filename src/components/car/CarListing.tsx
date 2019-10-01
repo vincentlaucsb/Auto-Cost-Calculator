@@ -3,6 +3,7 @@ import { Car } from "./Car";
 import { fuelString, FuelType, FuelPrice } from "../Fuel";
 import { Button } from "../Buttons";
 import { DeleteConfirm } from "../DeleteConfirm";
+import { CarDatabase } from "../CarDatabase";
 
 interface ListingState {
     carData: Car;
@@ -11,7 +12,8 @@ interface ListingState {
 
 interface ListingProps {
     data: Car;
-    removeCar: (car: String) => void;
+    updateCar: (data: Car) => void;
+    removeCar: (car: number) => void;
 }
 
 // An individual car listing
@@ -39,6 +41,8 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
         this.setState({
             isEditable: false
         });
+
+        this.props.updateCar(this.state.carData);
     }
 
     updateMpg(event) {

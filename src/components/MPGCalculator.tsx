@@ -161,6 +161,11 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.setState({ data: this.state.data });
     }
 
+    // Update all cars
+    updateAll(newData: CarDatabase) {
+        this.setState({ data: newData });
+    }
+
     // Remove all car listings
     removeAll() {
         this.state.data.removeAll();
@@ -276,6 +281,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                     <div key="c">
                         <CarList data={this.state.data}
                             addCar={this.addCar}
+                            updateAll={this.updateAll}
                             removeAll={this.removeAll}
                             removeCar={this.removeCar}
                         />

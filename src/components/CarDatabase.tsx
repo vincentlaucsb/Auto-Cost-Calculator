@@ -24,6 +24,11 @@ export class CarDatabase {
         this.nextId++;
     }
 
+    // Update a car listing
+    updateCar(id: number, data: Car) {
+        this.data.set(id, data);
+    }
+
     // Remove a car by ID
     removeCar(id: number) {
         return this.data.delete(id);
