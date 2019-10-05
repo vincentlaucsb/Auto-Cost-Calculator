@@ -37,6 +37,10 @@ export class Car {
     get registration() { return this.data.registration; }
     get fuelType() { return this.data.fuelType; }
 
+    set name(value: any) {
+        this.data.name = value;
+    }
+
     // Make sure values are numeric types and not strings
     set price(value: any) {
         this.data.price = parseFloat(value);

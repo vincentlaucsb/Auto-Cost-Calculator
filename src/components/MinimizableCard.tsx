@@ -49,7 +49,10 @@ export class MinimizableCard extends React.Component<MinimizableCardProps, {
 
     render() {
         const minimized = this.state['minimized'];
-        var children = <div className="card-body">
+        var children = <div className="card-body" style={{
+            overflowX: "hidden",
+            overflowY: "hidden"
+        }}>
             {this.props.children}
         </div>;
 
@@ -57,7 +60,8 @@ export class MinimizableCard extends React.Component<MinimizableCardProps, {
             children = null;
         }
 
-        return <div className="card">
+        // Stretch to fit flexible box height wise
+        return <div className="card" style={{ height: "100%" }}>
             <div className="card-header">
                 <MinimizeTrigger onClick={this.minimize} minimized={minimized} />
                 { this.props.title }

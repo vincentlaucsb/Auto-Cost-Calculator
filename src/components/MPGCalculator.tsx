@@ -228,29 +228,9 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         // Grid
         var layouts = {
             lg: [
-                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
-                { i: 'b', x: 20, y: 0, w: 10, h: 3 },
-                { i: 'c', x: 20, y: 3, w: 10, h: 10 }
-            ],
-            md: [
-                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
-                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
-                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
-            ],
-            sm: [
-                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
-                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
-                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
-            ],
-            xs: [
-                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
-                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
-                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
-            ],
-            xxs: [
-                { i: 'a', x: 0, y: 0, w: 20, h: 2 },
-                { i: 'b', x: 20, y: 0, w: 10, h: 5 },
-                { i: 'c', x: 20, y: 5, w: 10, h: 10 }
+                { i: 'a', x: 0, y: 0, w: 20, h: 30 },
+                { i: 'gas', x: 20, y: 0, w: 10, h: 16 },
+                { i: 'c', x: 20, y: 2, w: 10, h: 40 }
             ]
         };
 
@@ -262,10 +242,16 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                 <ResponsiveReactGridLayout className="layout" layouts={layouts}
                     breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                     cols={{ lg: 30, md: 30, sm: 6, xs: 4, xxs: 2 }}
-                    isDraggable={false}
+
+                    rowHeight={10}
+
+                    // Make Bootstrap card headers the handle for drap/drop
+                    draggableHandle="div.card-header"
+
+                    // verticalCompact={false}
                 >
                     <div key="a">
-                        <div className="card" id="graph-panel">
+                        <div className="card" id="graph-panel" style={{ height: "100%" }}>
                             <div className="card-header">
                                 <Tabs items={tabItems}
                                     activeItem={this.state.activeTab}
@@ -277,7 +263,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                             </div>
                         </div>
                     </div>
-                    <div key="b">
+                    <div key="gas">
                         <GasPriceChanger ppg={this.state.ppg} updateGasPrice={this.updateGasPrice} />
                     </div>
                     <div key="c">

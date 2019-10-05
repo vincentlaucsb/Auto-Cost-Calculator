@@ -39,12 +39,17 @@ export class CarList extends React.Component<ListProps> {
         return <MinimizableCard title="Vehicles">
             <React.Fragment>
                 {controls}
-                <ul className="list-group list-group-flush">
+                <div style={{
+                    overflowX: "hidden",
+                    overflowY: "scroll"
+                }}>
+                <ul className="list-group list-group-flush" >
                     {this.props.data.toArray().map((i) => <CarListing
                         data={i}
                         updateCar={this.updateCar.bind(this, i.id)}
                         removeCar={this.props.removeCar.bind(this, i.id)} />)}
-                </ul>
+                    </ul>
+                </div>
             </React.Fragment>
         </MinimizableCard>;
     }

@@ -30,27 +30,28 @@ interface GasPriceProps {
     updateGasPrice: any; // change
 }
 
-class GasPriceChangerRow extends React.Component<
+class GasPriceChangerColumn extends React.Component<
     {id: FuelType, fuelPrice: string, onChange: any} ,{}
 >    {
     render() {
-        return <div className="form-group row">
+        return <div
+            className="form-group col-sm"
+            style={{ minWidth: "10em" }}
+        >
+            <input className="form-control"
+                name={fuelString(this.props.id)}
+                type="number"
+                step="0.01"
+                min="0"
+                id={this.props.id.toString()}
+                onChange={this.props.onChange}
+                value={this.props.fuelPrice}
+            />
             <label
                 htmlFor={this.props.id.toString()}
                 className="col-sm col-form-label">
                 {fuelString(this.props.id)}
             </label>
-            <div className="col-sm-8">
-                <input className="form-control"
-                    name={fuelString(this.props.id)}
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    id={this.props.id.toString()}
-                    onChange={this.props.onChange}
-                    value={this.props.fuelPrice}
-                />
-            </div>
         </div>
     }
 }
@@ -130,25 +131,27 @@ export class GasPriceChanger extends React.Component<
         return (
             <MinimizableCard title="Price of Gas">
                 <form onSubmit={this.handleSubmit}>
-                    <GasPriceChangerRow
+                    <div className="row">
+                    <GasPriceChangerColumn
                         id={FuelType.regular}
                         fuelPrice={this.state.temp_ppg.get(FuelType.regular)}
                         onChange={this.onChange} />
-                    <GasPriceChangerRow
+                    <GasPriceChangerColumn
                         id={FuelType.mid}
                         fuelPrice={this.state.temp_ppg.get(FuelType.mid)}
                         onChange={this.onChange}
                     />
-                    <GasPriceChangerRow
+                    <GasPriceChangerColumn
                         id={FuelType.premium}
                         fuelPrice={this.state.temp_ppg.get(FuelType.premium)}
                         onChange={this.onChange}
                     />
-                    <GasPriceChangerRow
+                    <GasPriceChangerColumn
                         id={FuelType.diesel}
                         fuelPrice={this.state.temp_ppg.get(FuelType.diesel)}
                         onChange={this.onChange}
-                    />
+                        />
+                    </div>
 
                     {updateButton} {infoBox}
                 </form>
