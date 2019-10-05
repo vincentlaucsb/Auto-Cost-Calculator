@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { DangerButton } from "./Buttons";
+import { DangerButton, PrimaryButton } from "./Buttons";
 
 interface DeleteConfirmProps {
     text?: string;
@@ -29,16 +29,23 @@ export class DeleteConfirm extends React.Component<DeleteConfirmProps, { confirm
     }
 
     toggle() {
-        this.setState({ confirm: true });
+        this.setState({ confirm: !this.state.confirm });
     }
 
     render() {
         const text = ('text' in this.props) ? this.props.text : 'x';
+        let deleteButton = <img src="./img/delete-24px.svg" onClick={this.toggle} alt="Delete" />;
+
+        if ('text' in this.props) {
+            deleteButton = <DangerButton className={this.props.className} onClick={this.toggle}>{text}</DangerButton>;
+        }
 
         return this.state.confirm ?
-            <DangerButton className={this.props.className}
-                onClick={this.delete}>Confirm</DangerButton> :
-            <DangerButton className={this.props.className}
-                onClick={this.toggle}>{text}</DangerButton>;
+            <React.Fragment>
+                <DangerButton className={this.props.className}
+                    onClick={this.delete}>Confirm</DangerButton>
+                <PrimaryButton className={this.props.className} onClick={this.toggle}>Cancel</PrimaryButton>
+            </React.Fragment> :
+            deleteButton;
     }
 }

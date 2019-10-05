@@ -90,7 +90,7 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
             <span>Registration: {this.state.carData.registration}</span>
         </div>
 
-        var editButton = <Button onClick={this.makeEditable}>Edit</Button>;
+        var editButton = <img src="./img/edit-24px.svg" alt="Edit" onClick={this.makeEditable} />;
 
         if (this.state.isEditable) {
             details = <div className="details">
@@ -101,15 +101,20 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
                 <span>Registration: <input name="registration" type="number" value={this.state.carData.registration} onChange={this.updateRegistration}></input></span>
             </div>
 
-            editButton = <Button onClick={this.handleSubmit}>Update</Button>;
+            editButton = <img src="./img/save-24px.svg" alt="Save" onClick={this.handleSubmit} />;
         }
 
         return (
             <li className="car-listing list-group-item">
-                <span>
+                <span style={{
+                    display: "flex",
+                    flexDirection: "row"
+                }}>
                     {this.props.data.name}
-                    <DeleteConfirm className="btn-sm" delete={this.props.removeCar}></DeleteConfirm>
-                    {editButton}
+                    <span style={{ paddingLeft: "4px" }}>
+                        {editButton}
+                        <DeleteConfirm className="btn-sm" delete={this.props.removeCar}></DeleteConfirm>
+                    </span>
                 </span>
                 {details}
             </li>
