@@ -11,7 +11,7 @@ interface ListProps {
     data: CarDatabase;
     addCar: (data: Car) => void;
     removeAll: () => void;
-    updateAll: (data: CarDatabase) => void;
+    updateCar: (id: number, data: Car) => void;
     removeCar: (car: number) => void;
 };
 
@@ -22,10 +22,7 @@ export class CarList extends React.Component<ListProps> {
     }
 
     updateCar(id: number, data: Car) {
-        var tempDb = this.props.data;
-        tempDb.updateCar(id, data);
-
-        this.props.updateAll(tempDb);
+        this.props.updateCar(id, data);
     }
 
     render() {
@@ -45,7 +42,7 @@ export class CarList extends React.Component<ListProps> {
                 <ul className="list-group list-group-flush">
                     {this.props.data.toArray().map((i) => <CarListing
                         data={i}
-                        updateCar={this.props.updateAll.bind(this)}
+                        updateCar={this.updateCar.bind(this, i.id)}
                         removeCar={this.props.removeCar.bind(this, i.id)} />)}
                 </ul>
             </React.Fragment>

@@ -128,6 +128,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             modalsVisible: temp_modals_visible
         };
 
+        this.updateCar = this.updateCar.bind(this);
         this.updateGasPrice = this.updateGasPrice.bind(this);
         this.updateMileage = this.updateMileage.bind(this);
         this.updateMonths = this.updateMonths.bind(this);
@@ -161,9 +162,10 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.setState({ data: this.state.data });
     }
 
-    // Update all cars
-    updateAll(newData: CarDatabase) {
-        this.setState({ data: newData });
+    // Update an individual cars
+    updateCar(id: number, data: Car) {
+        this.state.data.updateCar(id, data);
+        this.setState({ data: this.state.data });
     }
 
     // Remove all car listings
@@ -281,7 +283,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                     <div key="c">
                         <CarList data={this.state.data}
                             addCar={this.addCar}
-                            updateAll={this.updateAll}
+                            updateCar={this.updateCar}
                             removeAll={this.removeAll}
                             removeCar={this.removeCar}
                         />

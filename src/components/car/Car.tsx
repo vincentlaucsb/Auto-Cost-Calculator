@@ -14,7 +14,9 @@ class CarData {
     fuelType: FuelType;
 }
 
-export class Car extends CarData {
+export class Car {
+    data: CarData;
+
     constructor(data: CarData = {
         id: -1,
         name: "",
@@ -24,21 +26,52 @@ export class Car extends CarData {
         registration: 0,
         fuelType: FuelType.regular
     }) {
-        super();
-        this.name = data.name;
-        this.price = data.price;
-        this.mpg = data.mpg;
-        this.insurance = data.insurance;
-        this.registration = data.registration;
-        this.fuelType = data.fuelType;
+        this.data = data;
+    }
+
+    get id() { return this.data.id; }
+    get name() { return this.data.name; }
+    get price() { return this.data.price; }
+    get mpg() { return this.data.mpg; }
+    get insurance() { return this.data.insurance; }
+    get registration() { return this.data.registration; }
+    get fuelType() { return this.data.fuelType; }
+
+    // Make sure values are numeric types and not strings
+    set price(value: any) {
+        this.data.price = parseFloat(value);
+    }
+
+    set id(value: any) {
+        this.data.id = parseInt(value);
+    }
+
+    set mpg(value: any) {
+        this.data.mpg = parseFloat(value);
+    }
+
+    set fuelType(value: any) {
+        this.data.fuelType = value;
+    }
+
+    set insurance(value: any) {
+        this.data.insurance = parseFloat(value);
+    }
+
+    set registration(value: any) {
+        this.data.registration = parseFloat(value);
     }
 
     costToDriveMonth(monthlyMileage: number, months: number, ppg: FuelPrice): number {
         // Calculate the total cost to drive a car x months
+
         const miles = months * monthlyMileage;
-        return this.price +
+        let ret = this.price +
             (this.insurance * months) +
             this.costToDriveGasOnly(miles, ppg);
+
+        // console.log("Cost to drive", this.name, months, "months is", ret);
+        return ret;
     }
 
     costToDriveGasOnly(miles: number, ppg: FuelPrice): number {

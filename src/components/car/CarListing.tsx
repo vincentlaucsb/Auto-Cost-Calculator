@@ -94,11 +94,11 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
 
         if (this.state.isEditable) {
             details = <div className="details">
-                <span>MPG: <input name="mpg" value={this.state.carData.mpg} onChange={this.updateMpg}></input></span>
-                <span>Price: <input name="price" value={this.state.carData.price} onChange={this.updatePrice}></input></span>
+                <span>MPG: <input name="mpg" type="number" value={this.state.carData.mpg} onChange={this.updateMpg}></input></span>
+                <span>Price: <input name="price" type="number" value={this.state.carData.price} onChange={this.updatePrice}></input></span>
                 <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>
-                <span>Insurance: <input name="insurance" value={this.state.carData.insurance} onChange={this.updateInsurance}></input></span>
-                <span>Registration: <input name="registration" value={this.state.carData.registration} onChange={this.updateRegistration}></input></span>
+                <span>Insurance: <input name="insurance" type="number" value={this.state.carData.insurance} onChange={this.updateInsurance}></input></span>
+                <span>Registration: <input name="registration" type="number" value={this.state.carData.registration} onChange={this.updateRegistration}></input></span>
             </div>
 
             editButton = <Button onClick={this.handleSubmit}>Update</Button>;
