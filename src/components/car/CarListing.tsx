@@ -4,6 +4,7 @@ import { fuelString, FuelType, FuelPrice } from "../Fuel";
 import { Button } from "../Buttons";
 import { DeleteConfirm } from "../DeleteConfirm";
 import { CarDatabase } from "../CarDatabase";
+import { NumberField, GasField } from "./CarFields";
 
 interface ListingState {
     carData: Car;
@@ -29,6 +30,7 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
         this.updatePrice = this.updatePrice.bind(this);
         this.updateRegistration = this.updateRegistration.bind(this);
         this.updateInsurance = this.updateInsurance.bind(this);
+        this.updateFuel = this.updateFuel.bind(this);
         this.makeEditable = this.makeEditable.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -81,26 +83,27 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
         });
     }
 
-    render() {
-        var details = <div className="details">
-            <span>MPG: {this.state.carData.mpg}</span>
-            <span>Price: {this.state.carData.price}</span>
-            <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>
-            <span>Insurance: {this.state.carData.insurance}</span>
-            <span>Registration: {this.state.carData.registration}</span>
-        </div>
+    updateFuel(event) {
+        let newCarData = this.state.carData;
+        newCarData.fuelType = event.target.value;
 
+        this.setState({
+            carData: newCarData
+        });
+    }
+
+    render() {
+        var gasFieldOptions = new Map();
+        for (var i = 0; i < 4; i++)
+        {
+            gasFieldOptions.set(i, fuelString(i)); 
+        }
+
+        var details = <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>
         var editButton = <img src="./img/edit-24px.svg" alt="Edit" onClick={this.makeEditable} />;
 
         if (this.state.isEditable) {
-            details = <div className="details">
-                <span>MPG: <input name="mpg" type="number" value={this.state.carData.mpg} onChange={this.updateMpg}></input></span>
-                <span>Price: <input name="price" type="number" value={this.state.carData.price} onChange={this.updatePrice}></input></span>
-                <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>
-                <span>Insurance: <input name="insurance" type="number" value={this.state.carData.insurance} onChange={this.updateInsurance}></input></span>
-                <span>Registration: <input name="registration" type="number" value={this.state.carData.registration} onChange={this.updateRegistration}></input></span>
-            </div>
-
+            details = <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>;
             editButton = <img src="./img/save-24px.svg" alt="Save" onClick={this.handleSubmit} />;
         }
 
@@ -116,7 +119,44 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
                         <DeleteConfirm className="btn-sm" delete={this.props.removeCar}></DeleteConfirm>
                     </span>
                 </span>
-                {details}
+                <div className="details">
+                    <NumberField
+                        label="MPG"
+                        value={this.state.carData.mpg}
+                        fieldName="mpg"
+                        isEditable={this.state.isEditable}
+                        onChange={this.updateMpg}
+                    />
+                    <NumberField
+                        label="Price"
+                        value={this.state.carData.price}
+                        fieldName="price"
+                        isEditable={this.state.isEditable}
+                        onChange={this.updatePrice}
+                    />
+                    <GasField
+                        label="Fuel Type"
+                        value={this.state.carData.fuelType}
+                        options={gasFieldOptions}
+                        fieldName="fuelType"
+                        isEditable={this.state.isEditable}
+                        onChange={this.updateFuel}
+                    />
+                    <NumberField
+                        label="MPG"
+                        value={this.state.carData.mpg}
+                        fieldName="mpg"
+                        isEditable={this.state.isEditable}
+                        onChange={this.updatePrice}
+                    />
+                    <NumberField
+                        label="Insurance"
+                        value={this.state.carData.insurance}
+                        fieldName="insurane"
+                        isEditable={this.state.isEditable}
+                        onChange={this.updatePrice}
+                    />
+                </div>
             </li>
         );
     }

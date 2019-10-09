@@ -55,7 +55,7 @@ export class Car {
     }
 
     set fuelType(value: any) {
-        this.data.fuelType = value;
+        this.data.fuelType = parseInt(value);
     }
 
     set insurance(value: any) {
