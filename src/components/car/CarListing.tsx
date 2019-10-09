@@ -99,19 +99,16 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
             gasFieldOptions.set(i, fuelString(i)); 
         }
 
-        var details = <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>
-        var editButton = <img src="./img/edit-24px.svg" alt="Edit" onClick={this.makeEditable} />;
-
-        if (this.state.isEditable) {
-            details = <span>Fuel Type: {fuelString(this.state.carData.fuelType)}</span>;
-            editButton = <img src="./img/save-24px.svg" alt="Save" onClick={this.handleSubmit} />;
-        }
+        var editButton = !this.state.isEditable ?
+            <img src="./img/edit-24px.svg" alt="Edit" onClick={this.makeEditable} /> :
+            <img src="./img/save-24px.svg" alt="Save" onClick={this.handleSubmit} />;
 
         return (
             <li className="car-listing list-group-item">
                 <span style={{
                     display: "flex",
-                    flexDirection: "row"
+                    flexDirection: "row",
+                    alignItems: "center"
                 }}>
                     {this.props.data.name}
                     <span style={{ paddingLeft: "4px" }}>
@@ -143,16 +140,16 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
                         onChange={this.updateFuel}
                     />
                     <NumberField
-                        label="MPG"
-                        value={this.state.carData.mpg}
-                        fieldName="mpg"
+                        label="Insurance"
+                        value={this.state.carData.insurance}
+                        fieldName="insurane"
                         isEditable={this.state.isEditable}
                         onChange={this.updatePrice}
                     />
                     <NumberField
-                        label="Insurance"
-                        value={this.state.carData.insurance}
-                        fieldName="insurane"
+                        label="Registration"
+                        value={this.state.carData.registration}
+                        fieldName="registration"
                         isEditable={this.state.isEditable}
                         onChange={this.updatePrice}
                     />

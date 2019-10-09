@@ -20,7 +20,7 @@ export class NumberField extends React.Component<NumberFieldProps, {}> {
             return (
                 <span>{this.props.label}:
                     <input
-                        className="form-control"
+                        className="form-control form-control-sm"
                         name={this.props.fieldName}
                         type="number"
                         value={this.props.value}
@@ -42,17 +42,16 @@ interface GasFieldProps extends FieldProps<FuelType> {
 
 export class GasField extends React.Component<GasFieldProps, {}> {
     render() {
-        let optionKvs = Array.from(this.props.options);
-
         if (this.props.isEditable) {
             return (
                 <span>{this.props.label}:
                     <select
+                        className="custom-select custom-select-sm"
                         name={this.props.fieldName}
                         onChange={this.props.onChange}
                         defaultValue={this.props.value.toString()}
                     >
-                        {optionKvs.map((i) =>
+                        {Array.from(this.props.options).map((i) =>
                             <option value={i[0]}>{i[1]}</option>)}
                     </select>
                 </span>
