@@ -10,6 +10,9 @@ interface FieldProps<ValueType> {
     fieldName: string;
     isEditable: boolean;
     onChange?: (event: any) => void;
+
+    // Function for formatting the output string
+    formatter?: (value: any) => string;
 }
 
 type NumberFieldProps = FieldProps<number>;
@@ -30,8 +33,13 @@ export class NumberField extends React.Component<NumberFieldProps, {}> {
             );
         }
 
+        var displayText: any = this.props.value;
+        if ('formatter' in this.props) {
+            displayText = this.props.formatter(displayText);
+        }
+
         return (
-            <span>{this.props.label}: {this.props.value}</span>
+            <span>{this.props.label}: {displayText}</span>
         );
     }
 }

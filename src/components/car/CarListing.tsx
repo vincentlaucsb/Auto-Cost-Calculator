@@ -17,6 +17,15 @@ interface ListingProps {
     removeCar: (car: number) => void;
 }
 
+function formatMoney(value: number) {
+    var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    return formatter.format(value);
+}
+
 // An individual car listing
 export class CarListing extends React.Component<ListingProps, ListingState> {
     constructor(props: ListingProps) {
@@ -130,6 +139,7 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
                         fieldName="price"
                         isEditable={this.state.isEditable}
                         onChange={this.updatePrice}
+                        formatter={formatMoney}
                     />
                     <GasField
                         label="Fuel Type"
@@ -142,16 +152,18 @@ export class CarListing extends React.Component<ListingProps, ListingState> {
                     <NumberField
                         label="Insurance"
                         value={this.state.carData.insurance}
-                        fieldName="insurane"
+                        fieldName="insurance"
                         isEditable={this.state.isEditable}
-                        onChange={this.updatePrice}
+                        onChange={this.updateInsurance}
+                        formatter={(value) => formatMoney(value) + "/month"}
                     />
                     <NumberField
                         label="Registration"
                         value={this.state.carData.registration}
                         fieldName="registration"
                         isEditable={this.state.isEditable}
-                        onChange={this.updatePrice}
+                        onChange={this.updateRegistration}
+                        formatter={(value) => formatMoney(value) + "/year"}
                     />
                 </div>
             </li>
