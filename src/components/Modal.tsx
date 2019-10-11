@@ -51,6 +51,7 @@ interface ModalProps {
     triggerText?: string;
     visible?: boolean;
     hideTrigger?: boolean;
+    buttonProps?: any;
 }
 
 interface ModalState {
@@ -115,7 +116,7 @@ export class Modal extends React.Component<ModalProps, ModalState> {
     }
 
     render() {
-        return <PrimaryButton onClick={this.toggle}>
+        return <PrimaryButton onClick={this.toggle} {...this.props.buttonProps}>
             {this.props.triggerText}
         </PrimaryButton>;
     }

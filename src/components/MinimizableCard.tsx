@@ -24,6 +24,7 @@ class MinimizeTrigger extends React.Component<MinimizeTriggerProps> {
 
 interface MinimizableCardProps {
     title: string;
+    titleCorner?: JSX.Element;
     children: JSX.Element;
 }
 
@@ -49,6 +50,18 @@ export class MinimizableCard extends React.Component<MinimizableCardProps, {
 
     render() {
         const minimized = this.state['minimized'];
+
+        var title: any = this.props.title;
+        if ('titleCorner' in this.props) {
+            title = <React.Fragment>
+                {this.props.title}
+
+                <div style={{ float: "right" }}>
+                    {this.props.titleCorner}
+                </div>
+            </React.Fragment>;
+        }
+
         var children = <div className="card-body" style={{
             overflowX: "hidden",
             overflowY: "hidden"
@@ -61,12 +74,11 @@ export class MinimizableCard extends React.Component<MinimizableCardProps, {
         }
 
         // Stretch to fit flexible box height wise
+        // <MinimizeTrigger onClick={this.minimize} minimized={minimized} />
         return <div className="card" style={{ height: "100%" }}>
             <div className="card-header">
-                <MinimizeTrigger onClick={this.minimize} minimized={minimized} />
-                { this.props.title }
+                {title}
             </div>
-
             {children}
         </div>
     }

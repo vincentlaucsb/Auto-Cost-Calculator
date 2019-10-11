@@ -26,19 +26,27 @@ export class CarList extends React.Component<ListProps> {
     }
 
     render() {
-        const controls = <div>
+        const clearAll = <DeleteConfirm text="Clear All" delete={this.props.removeAll} />;
+
+        // Controls to add a car and remove all cars
+        const controls = <React.Fragment>
             <Modal submit={{
-                buttonName: "Add",
-                formName: "addCar"
-            }} triggerText="Add Vehicle" title="Add Vehicle">
+                    buttonName: "Add",
+                    formName: "addCar"
+                }}
+
+                buttonProps={{
+                    className: "btn-sm"
+                }}
+
+                triggerText="Add Vehicle" title="Add Vehicle">
                 <Adder addCar={this.props.addCar} />
             </Modal>
-            <DeleteConfirm text="Clear All" delete={this.props.removeAll} />
-        </div>;
+            <DeleteConfirm className="btn-sm" text="Clear All" delete={this.props.removeAll} />
+        </React.Fragment>;
 
-        return <MinimizableCard title="Vehicles">
+        return <MinimizableCard title="Vehicles" titleCorner={controls}>
             <React.Fragment>
-                {controls}
                 <div style={{
                     overflowX: "hidden",
                     overflowY: "scroll"
