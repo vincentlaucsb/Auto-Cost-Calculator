@@ -14,6 +14,19 @@ class CarData {
     fuelType: FuelType;
 }
 
+enum ServiceFrequency {
+    Month,
+    Miles
+}
+
+// Represents a reoccurring car service item, e.g.
+// an oil change or tire replacements
+class ServiceItem {
+    name: string;
+    frequency: number;
+    frequencyType: ServiceFrequency;
+}
+
 export class Car {
     data: CarData;
 
@@ -66,19 +79,20 @@ export class Car {
         this.data.registration = parseFloat(value);
     }
 
+    // Calculate the total cost to drive a car x months
     costToDriveMonth(monthlyMileage: number, months: number, ppg: FuelPrice): number {
-        // Calculate the total cost to drive a car x months
-
         const miles = months * monthlyMileage;
         let ret = this.price +
             (this.insurance * months) +
-            this.costToDriveGasOnly(miles, ppg);
 
-        // console.log("Cost to drive", this.name, months, "months is", ret);
+            // Divide annual registration cost by month
+            ((this.registration / 12) * months) +
+
+            this.fuelCost(miles, ppg);
         return ret;
     }
 
-    costToDriveGasOnly(miles: number, ppg: FuelPrice): number {
+    fuelCost(miles: number, ppg: FuelPrice): number {
         // Calculate the cost to drive a car (gas only)
         return (miles / this.mpg) * ppg.get(this.fuelType);
     }

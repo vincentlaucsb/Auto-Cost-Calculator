@@ -33,10 +33,10 @@ export class Table extends React.Component<TableProps> {
                 {this.props.data.toArray().map((i) =>
                 <tr>
                     <td>{i.name}</td>
-                    <td>{money(i.costToDriveGasOnly(10, ppg))}</td>
-                    <td>{money(i.costToDriveGasOnly(25, ppg))}</td>
-                    <td>{money(i.costToDriveGasOnly(100, ppg))}</td>
-                    <td>{money(i.costToDriveGasOnly(this.props.annualMileage / 12, ppg))}</td>
+                    <td>{money(i.fuelCost(10, ppg))}</td>
+                    <td>{money(i.fuelCost(25, ppg))}</td>
+                    <td>{money(i.fuelCost(100, ppg))}</td>
+                    <td>{money(i.fuelCost(this.props.annualMileage / 12, ppg))}</td>
                 </tr>
                 )}
             </tbody>
