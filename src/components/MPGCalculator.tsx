@@ -91,6 +91,7 @@ class Graph extends React.Component<GraphProps> {
 
 interface MpgCalculatorProps {
     data: CarDatabase;
+    ppg: FuelPrice;
 };
 
 interface MpgCalculatorState {
@@ -108,12 +109,11 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
     constructor(props: MpgCalculatorProps) {
         super(props);
 
-        let temp_ppg: FuelPrice = new Map([
-            [FuelType.regular, 2.87],
-            [FuelType.mid, 3.15],
-            [FuelType.premium, 3.4],
-            [FuelType.diesel, 3.18]
-        ]);
+        let temp_ppg = new FuelPrice();
+        temp_ppg.set(FuelType.regular, 2.87);
+        temp_ppg.set(FuelType.mid, 3.15);
+        temp_ppg.set(FuelType.premium, 3.4);
+        temp_ppg.set(FuelType.diesel, 3.18);
 
         let temp_modals_visible: Map<string, boolean> = new Map([
             ['carAdder', false]
@@ -136,6 +136,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.removeAll = this.removeAll.bind(this);
         this.removeCar = this.removeCar.bind(this);
         this.setActive = this.setActive.bind(this);
+        this.save = this.save.bind(this);
     }
     
     updateGasPrice(_ppg: FuelPrice) {
@@ -185,14 +186,24 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             activeTab: name
         });
     }
-    
+
+    // Save the auto cost calculator's state to local storage
+    save() {
+        let jsonData = { };
+        jsonData['ppg'] = this.state.ppg.dump();
+
+        console.log(jsonData);
+        console.log(JSON.stringify(jsonData));
+        localStorage.setItem('autoCostData', JSON.stringify(jsonData));
+    }
+
     render() {
         const tabItems: Array<string> = [
             "Chart", "Table"
         ];
 
         let body;
-        
+
         if (this.state.activeTab == "Chart") {
             body = <div>
                 <Graph
@@ -224,7 +235,6 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             />;
         }
 
-
         // Grid
         var layouts = {
             lg: [
@@ -238,6 +248,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             <ModalContainer />
             <div className="container-fluid">
                 <h1>Automobile Cost Calculator</h1>
+                <button onClick={this.save}>Save Data</button>
 
                 <ResponsiveReactGridLayout className="layout" layouts={layouts}
                     breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}

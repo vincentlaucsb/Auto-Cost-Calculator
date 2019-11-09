@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import { MpgCalculator } from "./components/MPGCalculator"
 import { Car } from "./components/car/Car"
-import { FuelType } from "./components/Fuel"
+import { FuelType, FuelPrice } from "./components/Fuel"
 import { CarDatabase } from "./components/CarDatabase";
 
 let cars: Array<Car> = [
@@ -67,8 +67,19 @@ let carDb = new CarDatabase();
 for (var i in cars) {
     carDb.addCar(cars[i]);
 }
+
+let savedData = localStorage.getItem('autoCostData');
+let ppg = new FuelPrice();
+
+if (savedData != null) {
+    savedData = JSON.parse(savedData);
+    console.log(savedData);
+    ppg.load(savedData['ppg']);
+}
+
+console.log(ppg);
     
 ReactDOM.render(
-    <MpgCalculator data={carDb} />,
+    <MpgCalculator data={carDb} ppg={ppg} />,
     document.getElementById('root')
 );

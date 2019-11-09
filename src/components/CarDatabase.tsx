@@ -1,7 +1,17 @@
 ﻿import { Car } from "./Car/Car";
+import { IJsonSerializable } from "./IJsonSerializable";
+import { jsonifyMap } from "./helpers";
 
 // Stores information of all cars in the app
-export class CarDatabase {
+export class CarDatabase implements IJsonSerializable {
+    load(data: object) {
+        
+    }
+
+    dump(): object {
+        return jsonifyMap(this.data);
+    }
+
     data: Map<number, Car>;
 
     // The ID assigned to the next listing
