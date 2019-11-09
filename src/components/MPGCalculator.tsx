@@ -183,6 +183,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
     save() {
         let jsonData = { };
         jsonData['ppg'] = this.state.ppg.dump();
+        jsonData['data'] = this.state.data.dump();
 
         console.log(jsonData);
         console.log(JSON.stringify(jsonData));

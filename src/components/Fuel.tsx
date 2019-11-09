@@ -27,7 +27,7 @@ export function fuelString(type: FuelType) {
 
 export class FuelPrice implements IJsonSerializable {
     constructor() {
-        this.data = new Map<FuelType, number>()
+        this.data = new Map<FuelType, number>();
     }
 
     get(key: FuelType): number {

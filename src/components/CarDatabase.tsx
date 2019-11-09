@@ -5,17 +5,21 @@ import { jsonifyMap } from "./helpers";
 // Stores information of all cars in the app
 export class CarDatabase implements IJsonSerializable {
     load(data: object) {
-        
+        // data is assumed to be a JSON array
+        for (let k in data) {
+            this.data.set(Number(k), data[k]);
+        }
     }
 
     dump(): object {
-        return jsonifyMap(this.data);
+        console.log("DUMPING CAR", JSON.stringify(this.data.get(0)));
+        return this.toArray();
     }
 
     data: Map<number, Car>;
 
     // The ID assigned to the next listing
-    nextId: number
+    nextId: number;
 
     constructor() {
         this.data = new Map<number, Car>();

@@ -3,9 +3,9 @@ import { Button, DangerButton } from "../Buttons";
 import { fuelString, FuelType, FuelPrice } from "../Fuel";
 import { MinimizableCard } from "../MinimizableCard";
 import { DeleteConfirm } from "../DeleteConfirm";
+import { IJsonSerializable } from "../IJSONSerializable";
 
 class CarData {
-    id: number;
     name: string;
     price: number;
     mpg: number;
@@ -27,11 +27,11 @@ class ServiceItem {
     frequencyType: ServiceFrequency;
 }
 
-export class Car {
+export class Car { // implements IJsonSerializable {
+    id: number;
     data: CarData;
 
     constructor(data: CarData = {
-        id: -1,
         name: "",
         price: 0,
         mpg: 0,
@@ -42,7 +42,6 @@ export class Car {
         this.data = data;
     }
 
-    get id() { return this.data.id; }
     get name() { return this.data.name; }
     get price() { return this.data.price; }
     get mpg() { return this.data.mpg; }
@@ -57,10 +56,6 @@ export class Car {
     // Make sure values are numeric types and not strings
     set price(value: any) {
         this.data.price = parseFloat(value);
-    }
-
-    set id(value: any) {
-        this.data.id = parseInt(value);
     }
 
     set mpg(value: any) {

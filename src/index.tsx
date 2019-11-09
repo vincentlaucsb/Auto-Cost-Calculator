@@ -8,7 +8,6 @@ import { CarDatabase } from "./components/CarDatabase";
 
 let cars: Array<Car> = [
     new Car({
-        id: 0,
         'name': '2018 Ford F-150',
         'mpg': 23,
         'price': 27705,
@@ -17,7 +16,6 @@ let cars: Array<Car> = [
         'registration': 0
     }),
     new Car({
-        id: 1,
         'name': '2018 Chevrolet Silverado 1500',
         'mpg': 21,
         'price': 28300,
@@ -26,7 +24,6 @@ let cars: Array<Car> = [
         'registration': 0
     }),
     new Car({
-        id: 2,
         'name': '2018 Ram 1500',
         'mpg': 23,
         'price': 27295,
@@ -35,7 +32,6 @@ let cars: Array<Car> = [
         'registration': 0
     }),
     new Car({
-        id: 3,
         'name': '2018 Toyota RAV4',
         'mpg': 26,
         'price': 24660,
@@ -44,7 +40,6 @@ let cars: Array<Car> = [
         'registration': 0
     }),
     new Car({
-        id: 4,
         'name': '2018 Nissan Rogue',
         'mpg': 29,
         'price': 24800,
@@ -53,7 +48,6 @@ let cars: Array<Car> = [
         'registration': 0
     }),
     new Car({
-        id: 5,
         'name': '2018 Toyota Camry',
         'mpg': 34,
         'price': 23645,
@@ -77,6 +71,7 @@ ppg.set(FuelType.diesel, 3.18);
 
 if (savedData != null) {
     savedData = JSON.parse(savedData);
+    carDb.load(savedData['data']);
     ppg.load(savedData['ppg']);
 }
 
