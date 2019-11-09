@@ -6,14 +6,19 @@ import { jsonifyMap } from "./helpers";
 export class CarDatabase implements IJsonSerializable {
     load(data: object) {
         // data is assumed to be a JSON array
-        for (let k in data) {
-            this.data.set(Number(k), data[k]);
+        for (let i in data) {
+            let tempCar = new Car();
+            tempCar.load(data[i]);
+            this.addCar(tempCar);
         }
     }
 
     dump(): object {
-        console.log("DUMPING CAR", JSON.stringify(this.data.get(0)));
-        return this.toArray();
+        let ret = [];
+        for (let car of this.data.values()) {
+            ret.push(car.dump());
+        }
+        return ret;
     }
 
     data: Map<number, Car>;

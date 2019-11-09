@@ -27,7 +27,20 @@ class ServiceItem {
     frequencyType: ServiceFrequency;
 }
 
-export class Car { // implements IJsonSerializable {
+export class Car implements IJsonSerializable {
+    load(data: object) {
+        this.name = data['name'];
+        this.price = data['price'];
+        this.mpg = data['mpg'];
+        this.insurance = data['insurance'];
+        this.registration = data['registration'];
+        this.fuelType = data['fuelType'];
+    }
+
+    dump(): object {
+        return this.data;
+    }
+
     id: number;
     data: CarData;
 
