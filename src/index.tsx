@@ -70,15 +70,16 @@ for (var i in cars) {
 
 let savedData = localStorage.getItem('autoCostData');
 let ppg = new FuelPrice();
+ppg.set(FuelType.regular, 2.87);
+ppg.set(FuelType.mid, 3.15);
+ppg.set(FuelType.premium, 3.4);
+ppg.set(FuelType.diesel, 3.18);
 
 if (savedData != null) {
     savedData = JSON.parse(savedData);
-    console.log(savedData);
     ppg.load(savedData['ppg']);
 }
 
-console.log(ppg);
-    
 ReactDOM.render(
     <MpgCalculator data={carDb} ppg={ppg} />,
     document.getElementById('root')

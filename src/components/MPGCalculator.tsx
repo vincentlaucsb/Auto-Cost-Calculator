@@ -94,9 +94,7 @@ interface MpgCalculatorProps {
     ppg: FuelPrice;
 };
 
-interface MpgCalculatorState {
-    data: CarDatabase;
-    ppg: FuelPrice;
+interface MpgCalculatorState extends MpgCalculatorProps{
     months: number;
     annualMileage: number;
     activeTab: string;
@@ -109,19 +107,13 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
     constructor(props: MpgCalculatorProps) {
         super(props);
 
-        let temp_ppg = new FuelPrice();
-        temp_ppg.set(FuelType.regular, 2.87);
-        temp_ppg.set(FuelType.mid, 3.15);
-        temp_ppg.set(FuelType.premium, 3.4);
-        temp_ppg.set(FuelType.diesel, 3.18);
-
         let temp_modals_visible: Map<string, boolean> = new Map([
             ['carAdder', false]
         ]);
         
         this.state = {
             data: props.data,
-            ppg: temp_ppg,
+            ppg: props.ppg,
             months: 48,
             annualMileage: 12000,
             activeTab: "Chart",
