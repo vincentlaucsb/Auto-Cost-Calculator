@@ -11,6 +11,7 @@ import { Table } from "./Car/Table";
 import { CarDatabase } from "./CarDatabase";
 import { Car } from "./Car/Car";
 import { CarList as CarList } from "./Car/List";
+import { Defaults } from "./Globals";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -127,6 +128,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.addCar = this.addCar.bind(this);
         this.removeAll = this.removeAll.bind(this);
         this.removeCar = this.removeCar.bind(this);
+        this.reset = this.reset.bind(this);
         this.setActive = this.setActive.bind(this);
         this.save = this.save.bind(this);
     }
@@ -179,14 +181,26 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         });
     }
 
+    // Reset the current calculator state
+    reset() {
+        let defaults = new Defaults();
+
+        this.setState({
+            data: defaults.cars(),
+            ppg: defaults.ppg()
+        });
+
+        this.save();
+    }
+
     // Save the auto cost calculator's state to local storage
     save() {
         let jsonData = { };
         jsonData['ppg'] = this.state.ppg.dump();
         jsonData['data'] = this.state.data.dump();
 
-        console.log(jsonData);
-        console.log(JSON.stringify(jsonData));
+        // console.log(jsonData);
+        // console.log(JSON.stringify(jsonData));
         localStorage.setItem('autoCostData', JSON.stringify(jsonData));
     }
 
@@ -241,7 +255,14 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             <ModalContainer />
             <div className="container-fluid">
                 <h1>Automobile Cost Calculator</h1>
-                <button onClick={this.save}>Save Data</button>
+                <button className="btn btn-primary"
+                    onClick={this.reset}>
+                    Reset</button>
+                <button
+                    className="btn btn-primary"
+                    onClick={this.save}>
+                    Save</button>
+                <button className="btn btn-primary">Save to File</button>
 
                 <ResponsiveReactGridLayout className="layout" layouts={layouts}
                     breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
