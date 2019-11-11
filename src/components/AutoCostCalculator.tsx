@@ -1,4 +1,5 @@
 import * as React from "react";
+import { saveAs } from 'file-saver';
 import { ModalContainer, Modal } from "./Modal";
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
@@ -131,6 +132,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         this.reset = this.reset.bind(this);
         this.setActive = this.setActive.bind(this);
         this.save = this.save.bind(this);
+        this.saveToFile = this.saveToFile.bind(this);
     }
     
     updateGasPrice(_ppg: FuelPrice) {
@@ -204,6 +206,20 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
         localStorage.setItem('autoCostData', JSON.stringify(jsonData));
     }
 
+    saveToFile() {
+        let jsonData = {};
+        jsonData['ppg'] = this.state.ppg.dump();
+        jsonData['data'] = this.state.data.dump();
+
+        var blob = new Blob([JSON.stringify(jsonData)],
+            {
+                type: "text/plain;charset=utf-8"
+            }
+        );
+
+        saveAs(blob, "auto-cost-data.json");
+    }
+
     render() {
         const tabItems: Array<string> = [
             "Chart", "Table"
@@ -255,6 +271,7 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
             <ModalContainer />
             <div className="container-fluid">
                 <h1>Automobile Cost Calculator</h1>
+
                 <button className="btn btn-primary"
                     onClick={this.reset}>
                     Reset</button>
@@ -262,7 +279,9 @@ export class MpgCalculator extends React.Component<MpgCalculatorProps, MpgCalcul
                     className="btn btn-primary"
                     onClick={this.save}>
                     Save</button>
-                <button className="btn btn-primary">Save to File</button>
+                <button className="btn btn-primary"
+                    onClick={this.saveToFile}
+                >Save to File</button>
 
                 <ResponsiveReactGridLayout className="layout" layouts={layouts}
                     breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
