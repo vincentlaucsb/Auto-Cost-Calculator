@@ -9,9 +9,19 @@ interface GraphProps {
 export class Graph extends React.Component<GraphProps> {
     render() {
         let series = Array.from(this.props.data.entries());
+        let keys = Array.from(this.props.data.keys());
+        console.log(keys);
 
-        return <FlexibleXYPlot
-            title="Cost of Ownership">
+        return <React.Fragment>
+            <FlexibleXYPlot
+            title="Cost of Ownership"
+            margin={{
+                left: 50,
+                right: 10,
+                top: 10,
+                bottom: 10
+            }}>
+
             <HorizontalGridLines />
             {series.map(kv => (
                 <LineSeries
@@ -19,15 +29,10 @@ export class Graph extends React.Component<GraphProps> {
                     data={kv[1]}
                />
             ))}
-            <DiscreteColorLegend
-                items={[
-                    {
-                        title: "test"
-                    }
-                ]}
-            />
             <XAxis />
             <YAxis />
-        </FlexibleXYPlot>;
+        </FlexibleXYPlot>
+        <DiscreteColorLegend items={keys} />
+        </React.Fragment>
     }
 }
