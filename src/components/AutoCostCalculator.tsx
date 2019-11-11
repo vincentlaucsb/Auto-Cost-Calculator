@@ -3,12 +3,8 @@ import { saveAs } from 'file-saver';
 import { ModalContainer, Modal } from "./Modal";
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
-import * as Helpers from "./helpers";
 import { FuelType, FuelPrice, GasPriceChanger } from "./Fuel";
 import { Tabs } from "./Tabs";
-
-import { Graph } from "./Charts/Graph";
-import { MileageChanger, MonthChanger } from "./Charts/GraphControls";
 
 import { Table } from "./Car/Table";
 import { CarDatabase } from "./CarDatabase";
@@ -32,6 +28,7 @@ interface AutoCostCalcState extends AutoCostCalcProps{
 };
 
 export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoCostCalcState> {
+    dynamicComponents: object;
     modalRef: any;
 
     constructor(props: AutoCostCalcProps) {
@@ -49,6 +46,8 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
             activeTab: "Chart",
             modalsVisible: temp_modals_visible
         };
+
+        this.dynamicComponents = {};
 
         this.updateCar = this.updateCar.bind(this);
         this.updateGasPrice = this.updateGasPrice.bind(this);
@@ -203,12 +202,17 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         let body;
 
         if (this.state.activeTab == "Chart") {
+            const Graph = React.lazy(() => import("./charts/Graph"));
+            const MileageChanger = React.lazy(() => import("./charts/MileageChanger"));
+            const MonthChanger = React.lazy(() => import("./charts/MonthChanger"));
+
             body = <div style={{
                 width: '100%',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column'
             }}>
+                <React.Suspense fallback={<div>Loading...</div>}>
                 <Graph
                     data={this.makeGraphData()}
                 />
@@ -224,7 +228,8 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
                     <div style={{width: '22.5%'}}>
                         <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
                     </div>
-                </div>
+                    </div>
+                </React.Suspense>
             </div>;
         } else {
             body = <Table
