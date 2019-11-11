@@ -203,7 +203,12 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         let body;
 
         if (this.state.activeTab == "Chart") {
-            body = <div>
+            body = <div style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
                 <Graph
                     data={this.makeGraphData()}
                 />

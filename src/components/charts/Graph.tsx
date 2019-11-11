@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 
-import { XYPlot, XAxis, YAxis, DiscreteColorLegend, HorizontalGridLines, LineSeries } from 'react-vis';
+import { FlexibleXYPlot, XAxis, YAxis, DiscreteColorLegend, HorizontalGridLines, LineSeries } from 'react-vis';
 
 interface GraphProps {
     data: Map<string, Array<object>>;
@@ -10,9 +10,8 @@ export class Graph extends React.Component<GraphProps> {
     render() {
         let series = Array.from(this.props.data.entries());
 
-        return <XYPlot
-            width={1000}
-            height={500}>
+        return <FlexibleXYPlot
+            title="Cost of Ownership">
             <HorizontalGridLines />
             {series.map(kv => (
                 <LineSeries
@@ -29,6 +28,6 @@ export class Graph extends React.Component<GraphProps> {
             />
             <XAxis />
             <YAxis />
-        </XYPlot>;
+        </FlexibleXYPlot>;
     }
 }
