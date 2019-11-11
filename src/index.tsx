@@ -15,6 +15,7 @@ let ppg = defaults.ppg();
 
 if (savedData != null) {
     savedData = JSON.parse(savedData);
+    carDb.removeAll();
     carDb.load(savedData['data']);
     ppg.load(savedData['ppg']);
 }
