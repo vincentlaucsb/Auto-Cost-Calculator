@@ -19,7 +19,8 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-grid-layout": "^0.16.6",
-    "react-modal": "^3.6.1"
+    "react-modal": "^3.6.1",
+    "react-vis": "^1.11.7"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.1",

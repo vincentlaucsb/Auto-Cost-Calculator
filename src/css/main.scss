@@ -6,6 +6,10 @@ $khaki: #c6ac8f;
 $umber: #5e503f;
 $white: darken(#ffffff, 10%);
 
+// React-vis
+@import "../../node_modules/react-vis/dist/main.scss";
+
+// More of my stuff
 body {
     background: $smoky-black;
     color: $white;

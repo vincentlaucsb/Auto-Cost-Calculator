@@ -5,8 +5,10 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 
 import * as Helpers from "./helpers";
 import { FuelType, FuelPrice, GasPriceChanger } from "./Fuel";
-import { MileageChanger, MonthChanger } from "./GraphControls";
 import { Tabs } from "./Tabs";
+
+import { Graph } from "./Charts/Graph";
+import { MileageChanger, MonthChanger } from "./Charts/GraphControls";
 
 import { Table } from "./Car/Table";
 import { CarDatabase } from "./CarDatabase";
@@ -16,81 +18,6 @@ import { Defaults } from "./Globals";
 import { FileLoader } from "./FileLoader";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
-declare var c3: any;
-declare var d3: any;
-
-interface GraphProps {
-    months: number;
-    annualMileage: number;
-    ppg: FuelPrice;
-    data: CarDatabase;
-}
-
-interface GraphData {
-    x: string;
-    columns: Array< Array<number|string> >;
-};
-
-class Graph extends React.Component<GraphProps> {
-    componentDidMount() {
-        // Force a render() call which will allow chart to show up
-        // Without this, react will call c3.generate() before #chart has been created,
-        // meaning that there is no HTML dom element to bind graph to, so it won't show.
-        this.updateChart();
-    }
-
-    updateChart() {
-        c3.generate({
-            bindto: '#chart',
-            data: this.makeData(this.props.data),
-            axis: {
-                x: {
-                    label: 'Months Driven'
-                },
-                y: {
-                    label: 'Cost'
-                }
-            }
-        });
-    }
-    
-    makeData(data: CarDatabase) {
-        // Process car data and generate cost of ownership
-        let graphData: GraphData = {
-            x: 'x', // Mile increments
-            columns: [
-                Array<number | string>('x').concat(
-                    Helpers.range(0, this.props.months)),
-            ]
-        };
-
-        var cars = data.toArray();
-        for (var i in cars) {
-            const car = cars[i];
-            const monthlyMileage = this.props.annualMileage / 12;
-
-            let cost: Array<any> = [
-                car.name
-            ];
-            
-            // Cost of car at months[j] months
-            for (var m = 0; m < this.props.months; m++) {
-                cost.push(car.costToDriveMonth(
-                    monthlyMileage, m, this.props.ppg));
-            }
-            
-            graphData.columns.push(cost);
-        }
-        
-        return graphData;
-    }
-    
-    render() {
-        this.updateChart();
-        return <div id="chart"></div>
-    }
-}
 
 interface AutoCostCalcProps {
     data: CarDatabase;
@@ -243,6 +170,31 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         saveAs(blob, "auto-cost-data.json");
     }
 
+    makeGraphData(): Map<string, Array<object>> {
+        let cars = this.state.data.toArray();
+
+        // a mapping of car names to arrays of (x, y) pairs
+        let data = new Map<string, Array<object>>();
+
+        for (let i in cars) {
+            let car = cars[i];
+
+            // An array of car costs, site-indexed by month
+            let costs = [];
+
+            for (var j = 0; j < this.state.months; j++) {
+                costs.push({
+                    x: j,
+                    y: car.costToDriveMonth(this.state.annualMileage / 12, j, this.state.ppg)
+                });
+            }
+
+            data.set(car.name, costs);
+        }
+
+        return data;
+    }
+
     render() {
         const tabItems: Array<string> = [
             "Chart", "Table"
@@ -253,10 +205,7 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         if (this.state.activeTab == "Chart") {
             body = <div>
                 <Graph
-                    annualMileage={this.state.annualMileage}
-                    months={this.state.months}
-                    data={this.state.data}
-                    ppg={this.state.ppg}
+                    data={this.makeGraphData()}
                 />
                 <div style={{
                     width: '100%',
