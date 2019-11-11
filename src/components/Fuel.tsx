@@ -52,11 +52,6 @@ export class FuelPrice implements IJsonSerializable {
     }
 }
 
-interface GasPriceProps {
-    ppg: FuelPrice;   // change
-    updateGasPrice: any; // change
-}
-
 class GasPriceChangerColumn extends React.Component<
     {id: FuelType, fuelPrice: string, onChange: any} ,{}
 >    {
@@ -81,6 +76,11 @@ class GasPriceChangerColumn extends React.Component<
             </label>
         </div>
     }
+}
+
+interface GasPriceProps {
+    ppg: FuelPrice;
+    updateGasPrice: any; // change
 }
 
 interface GasPriceState {

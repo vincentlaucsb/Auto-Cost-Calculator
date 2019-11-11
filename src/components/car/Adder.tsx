@@ -7,9 +7,9 @@ interface AdderState {
     error: boolean;
 }
 
+// Form used for adding new cars
 export class Adder extends React.Component<
     { addCar: (data: Car) => void }, AdderState> {
-    // Form used for adding new cars
 
     constructor(props) {
         super(props);
