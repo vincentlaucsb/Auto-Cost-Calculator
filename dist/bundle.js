@@ -194,9 +194,10 @@ class AutoCostCalculator extends React.Component {
         this.addCar = this.addCar.bind(this);
         this.removeAll = this.removeAll.bind(this);
         this.removeCar = this.removeCar.bind(this);
+        this.undoChanges = this.undoChanges.bind(this);
         this.reset = this.reset.bind(this);
         this.save = this.save.bind(this);
-        this.loadFile = this.loadFile.bind(this);
+        this.loadData = this.loadData.bind(this);
         this.saveFile = this.saveFile.bind(this);
     }
     updateGasPrice(_ppg) {
@@ -224,7 +225,12 @@ class AutoCostCalculator extends React.Component {
         this.state.data.removeCar(id);
         this.setState({ data: this.state.data });
     }
-    // Reset the current calculator state
+    // Reset any changes made since the last save state
+    undoChanges() {
+        let jsonData = localStorage.getItem('autoCostData');
+        this.loadData(JSON.parse(jsonData));
+    }
+    // Restore original defaults
     reset() {
         let defaults = new Globals_1.Defaults();
         this.setState({
@@ -238,23 +244,18 @@ class AutoCostCalculator extends React.Component {
         let jsonData = {};
         jsonData['ppg'] = this.state.ppg.dump();
         jsonData['data'] = this.state.data.dump();
-        // console.log(jsonData);
-        // console.log(JSON.stringify(jsonData));
         localStorage.setItem('autoCostData', JSON.stringify(jsonData));
     }
-    loadFile(data) {
-        // console.log("GOT DATA", data);
+    // Load previously saved data stored in a JSON format
+    loadData(data) {
         let ppg = new Fuel_1.FuelPrice();
         ppg.load(data['ppg']);
         let cars = new CarDatabase_1.CarDatabase();
         cars.load(data['data']);
-        console.log("PPG", ppg);
-        console.log("CARS", cars);
         this.setState({
             ppg: ppg,
             data: cars
         });
-        console.log("STATE UPDATED");
         this.save();
     }
     saveFile() {
@@ -276,20 +277,31 @@ class AutoCostCalculator extends React.Component {
             ]
         };
         let MainDisplay = React.lazy(() => Promise.resolve().then(() => __webpack_require__(/*! ./MainDisplay */ "./src/components/MainDisplay.tsx")));
+        let saveControls = React.createElement("div", { className: "action-bar" },
+            React.createElement("button", { className: "btn btn-primary", onClick: this.undoChanges },
+                React.createElement("img", { src: "./img/undo-24px.svg", alt: "Save" }),
+                "Undo Changes"),
+            React.createElement(Modal_1.Modal, { submit: {
+                    buttonName: "Load",
+                    formName: "loadFile"
+                }, buttonProps: {
+                    className: "btn-primary"
+                }, triggerText: "Load", title: "Load" },
+                React.createElement(FileLoader_1.FileLoader, { loadFile: this.loadData })),
+            React.createElement("button", { className: "btn btn-primary", onClick: this.save },
+                React.createElement("img", { src: "./img/save-24px.svg", alt: "Save" }),
+                " Save"),
+            React.createElement("button", { className: "btn btn-primary", onClick: this.saveFile },
+                React.createElement("img", { src: "./img/file_copy-24px.svg", alt: "Save" }),
+                "Save to File"),
+            React.createElement("button", { className: "btn btn-primary", onClick: this.reset },
+                React.createElement("img", { src: "./img/refresh-24px.svg", alt: "Save" }),
+                "Restore Defaults"));
         return React.createElement(React.Fragment, null,
             React.createElement(Modal_1.ModalContainer, null),
             React.createElement("div", { className: "container-fluid" },
                 React.createElement("h1", null, "Automobile Cost Calculator"),
-                React.createElement("button", { className: "btn btn-primary", onClick: this.reset }, "Reset"),
-                React.createElement("button", { className: "btn btn-primary", onClick: this.save }, "Save"),
-                React.createElement(Modal_1.Modal, { submit: {
-                        buttonName: "Load from File",
-                        formName: "loadFile"
-                    }, buttonProps: {
-                        className: "btn-primary"
-                    }, triggerText: "Load from File", title: "Load from File" },
-                    React.createElement(FileLoader_1.FileLoader, { loadFile: this.loadFile })),
-                React.createElement("button", { className: "btn btn-primary", onClick: this.saveFile }, "Save to File"),
+                saveControls,
                 React.createElement(ResponsiveReactGridLayout, { className: "layout", layouts: layouts, breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }, cols: { lg: 30, md: 30, sm: 6, xs: 4, xxs: 2 }, rowHeight: 10, 
                     // Make Bootstrap card headers the handle for drap/drop
                     draggableHandle: "div.card-header" },

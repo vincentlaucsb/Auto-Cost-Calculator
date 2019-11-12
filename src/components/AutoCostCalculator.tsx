@@ -46,9 +46,10 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         this.addCar = this.addCar.bind(this);
         this.removeAll = this.removeAll.bind(this);
         this.removeCar = this.removeCar.bind(this);
+        this.undoChanges = this.undoChanges.bind(this);
         this.reset = this.reset.bind(this);
         this.save = this.save.bind(this);
-        this.loadFile = this.loadFile.bind(this);
+        this.loadData = this.loadData.bind(this);
         this.saveFile = this.saveFile.bind(this);
     }
     
@@ -82,7 +83,13 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         this.setState({ data: this.state.data });
     }
 
-    // Reset the current calculator state
+    // Reset any changes made since the last save state
+    undoChanges() {
+        let jsonData = localStorage.getItem('autoCostData');
+        this.loadData(JSON.parse(jsonData));
+    }
+
+    // Restore original defaults
     reset() {
         let defaults = new Defaults();
 
@@ -100,28 +107,21 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         jsonData['ppg'] = this.state.ppg.dump();
         jsonData['data'] = this.state.data.dump();
 
-        // console.log(jsonData);
-        // console.log(JSON.stringify(jsonData));
         localStorage.setItem('autoCostData', JSON.stringify(jsonData));
     }
 
-    loadFile(data: object) {
-        // console.log("GOT DATA", data);
+    // Load previously saved data stored in a JSON format
+    loadData(data: object) {
         let ppg = new FuelPrice();
         ppg.load(data['ppg']);
 
         let cars = new CarDatabase();
         cars.load(data['data']);
 
-        console.log("PPG", ppg);
-        console.log("CARS", cars);
-
         this.setState({
             ppg: ppg,
             data: cars
         });
-
-        console.log("STATE UPDATED");
 
         this.save();
     }
@@ -151,34 +151,46 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         };
 
         let MainDisplay = React.lazy(() => import("./MainDisplay"));
+        let saveControls = <div className="action-bar">
+            <button className="btn btn-primary"
+                onClick={this.undoChanges}>
+                <img src="./img/undo-24px.svg" alt="Save" />
+                Undo Changes
+            </button>
+            <Modal submit={{
+                buttonName: "Load",
+                formName: "loadFile"
+            }}
+
+                buttonProps={{
+                    className: "btn-primary"
+                }}
+
+                triggerText="Load" title="Load">
+                <FileLoader loadFile={this.loadData} />
+            </Modal>
+            <button
+                className="btn btn-primary"
+                onClick={this.save}>
+                <img src="./img/save-24px.svg" alt="Save" /> Save</button>
+            <button className="btn btn-primary"
+                onClick={this.saveFile}
+            >
+                <img src="./img/file_copy-24px.svg" alt="Save" />
+                Save to File</button>
+            <button className="btn btn-primary"
+                onClick={this.reset}
+            >
+                <img src="./img/refresh-24px.svg" alt="Save" />
+                Restore Defaults</button>
+        </div>
 
         return <React.Fragment>
             <ModalContainer />
             <div className="container-fluid">
                 <h1>Automobile Cost Calculator</h1>
 
-                <button className="btn btn-primary"
-                    onClick={this.reset}>
-                    Reset</button>
-                <button
-                    className="btn btn-primary"
-                    onClick={this.save}>
-                    Save</button>
-                <Modal submit={{
-                    buttonName: "Load from File",
-                    formName: "loadFile"
-                }}
-
-                    buttonProps={{
-                        className: "btn-primary"
-                    }}
-
-                    triggerText="Load from File" title="Load from File">
-                    <FileLoader loadFile={this.loadFile} />
-                </Modal>
-                <button className="btn btn-primary"
-                    onClick={this.saveFile}
-                >Save to File</button>
+                {saveControls}
 
                 <ResponsiveReactGridLayout className="layout" layouts={layouts}
                     breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
