@@ -36,7 +36,7 @@ export default class Graph extends React.Component<GraphProps> {
             xScale={{ type: 'linear' }}
             yScale={{
                 type: 'linear',
-                stacked: true
+                stacked: false
             }}
 
             enableSlices="x"
