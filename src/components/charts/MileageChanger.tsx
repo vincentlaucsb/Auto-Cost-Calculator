@@ -2,29 +2,19 @@
 
 class MileageChangerProps {
     mileage: number;
-    updateMileage: any;
+    updateMileage: (mileage: number) => void;
 }
 
 export default class MileageChanger extends React.Component<
-    MileageChangerProps, { mileage: number }> {
+    MileageChangerProps> {
     constructor(props) {
         super(props);
-
-        this.state = {
-            mileage: 12000
-        }
-
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event) {
-        const _mileage = event.target.value;
-
-        this.setState({
-            mileage: _mileage
-        });
-
-        this.props.updateMileage(_mileage);
+        const mileage = event.target.value;
+        this.props.updateMileage(mileage);
     }
 
     render() {
@@ -33,14 +23,14 @@ export default class MileageChanger extends React.Component<
                 min="0"
                 max="100000"
                 type="range"
-                value={this.state.mileage}
+                value={this.props.mileage}
                 onChange={this.handleChange}
             />
             <label htmlFor="mileage" className="col-sm col-form-label">
                 <b>Miles Per: </b>
-                Year: {this.state.mileage} &nbsp;
-                Month: {Math.round(this.state.mileage / 12)} &nbsp;
-                Day: {Math.round(this.state.mileage / 365)} 
+                Year: {this.props.mileage} &nbsp;
+                Month: {Math.round(this.props.mileage / 12)} &nbsp;
+                Day: {Math.round(this.props.mileage / 365)}
             </label>
         </form>
     }

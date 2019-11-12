@@ -2,28 +2,18 @@
 
 interface MonthChangerProps {
     months: number;
-    updateMonths: any;
+    updateMonths: (numMonths: number) => void;
 }
 
-export default class MonthChanger extends React.Component<MonthChangerProps, { months: number }> {
+export default class MonthChanger extends React.Component<MonthChangerProps> {
     constructor(props) {
         super(props);
-
-        this.state = {
-            months: this.props.months
-        };
-
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event) {
-        const _months = event.target.value;
-
-        this.setState({
-            months: _months
-        });
-
-        this.props.updateMonths(_months);
+        const months = event.target.value;
+        this.props.updateMonths(months);
     }
 
     render() {
@@ -32,7 +22,7 @@ export default class MonthChanger extends React.Component<MonthChangerProps, { m
                 min="0"
                 step="1"
                 type="number"
-                value={this.state.months}
+                value={this.props.months}
                 onChange={this.handleChange}
             />
             <label htmlFor="months" className="col-sm col-form-label">

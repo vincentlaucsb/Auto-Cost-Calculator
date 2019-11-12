@@ -30,6 +30,38 @@ export default class MainDisplay extends React.Component<MainDisplayProps, MainD
         this.setActive = this.setActive.bind(this);
     }
 
+    getChart() {
+        const Graph = React.lazy(() => import("./charts/Graph"));
+        const MileageChanger = React.lazy(() => import("./charts/MileageChanger"));
+        const MonthChanger = React.lazy(() => import("./charts/MonthChanger"));
+
+        return <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column'
+        }}>
+            <React.Suspense fallback={<div>Loading...</div>}>
+                <Graph
+                    data={this.makeGraphData()}
+                />
+                <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignContent: 'space-around',
+                    flexDirection: 'row'
+                }}>
+                    <div style={{ width: '72.5%' }}>
+                        <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
+                    </div>
+                    <div style={{ width: '22.5%' }}>
+                        <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
+                    </div>
+                </div>
+            </React.Suspense>
+        </div>;
+    }
+
     makeGraphData(): Map<string, Array<object>> {
         let cars = this.props.data.toArray();
 
@@ -61,9 +93,9 @@ export default class MainDisplay extends React.Component<MainDisplayProps, MainD
         });
     }
 
-    updateMonths(_months: number) {
+    updateMonths(numMonths: number) {
         this.setState({
-            months: _months
+            months: numMonths
         });
     }
 
@@ -81,42 +113,14 @@ export default class MainDisplay extends React.Component<MainDisplayProps, MainD
         let body;
 
         if (this.state.activeTab == "Chart") {
-            const Graph = React.lazy(() => import("./charts/Graph"));
-            const MileageChanger = React.lazy(() => import("./charts/MileageChanger"));
-            const MonthChanger = React.lazy(() => import("./charts/MonthChanger"));
-
-            body = <div style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
-                <React.Suspense fallback={<div>Loading...</div>}>
-                    <Graph
-                        data={this.makeGraphData()}
-                    />
-                    <div style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignContent: 'space-around',
-                        flexDirection: 'row'
-                    }}>
-                        <div style={{ width: '72.5%' }}>
-                            <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
-                        </div>
-                        <div style={{ width: '22.5%' }}>
-                            <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
-                        </div>
-                    </div>
-                </React.Suspense>
-            </div>;
+            body = this.getChart();
         } else {
             body = <Table
                 annualMileage={this.state.annualMileage}
                 months={this.state.months}
                 data={this.props.data}
                 ppg={this.props.ppg}
-            />;
+            />; 
         }
 
         return <div className="card" id="graph-panel" style={{ height: "100%" }}>
