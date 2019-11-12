@@ -3,6 +3,7 @@
 import { FileLoader } from "./FileLoader";
 import { DeleteConfirm } from "./DeleteConfirm";
 import { Modal } from "./Modal";
+import { Button } from "./Buttons";
 
 interface ActionBarProps {
     loadData: (data: object) => void;
@@ -18,6 +19,14 @@ export default class ActionBar extends React.Component<ActionBarProps> {
         super(props);
     }
 
+    makeLoadTrigger(onClick: any) {
+        return <Button
+            onClick={onClick}
+            className="btn-primary">
+            <img src="./img/folder_open-24px.svg" alt="Save" />
+            Load</Button>;
+    }
+
     render() {
         return <div className="action-bar btn-toolbar"
             role="toolbar">
@@ -27,16 +36,13 @@ export default class ActionBar extends React.Component<ActionBarProps> {
                     <img src="./img/undo-24px.svg" alt="Save" />
                     Undo Changes
             </button>
-                <Modal submit={{
-                    buttonName: "Load",
-                    formName: "loadFile"
-                }}
-
-                    buttonProps={{
-                        className: "btn-primary"
+                <Modal
+                    submit={{
+                        buttonName: "Load",
+                        formName: "loadFile"
                     }}
-
-                    triggerText="Load" title="Load">
+                    trigger={this.makeLoadTrigger}
+                    title="Load">
                     <FileLoader loadFile={this.props.loadData} />
                 </Modal>
                 <button

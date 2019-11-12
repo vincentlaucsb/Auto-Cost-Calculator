@@ -168,10 +168,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 const FileLoader_1 = __webpack_require__(/*! ./FileLoader */ "./src/components/FileLoader.tsx");
 const Modal_1 = __webpack_require__(/*! ./Modal */ "./src/components/Modal.tsx");
+const Buttons_1 = __webpack_require__(/*! ./Buttons */ "./src/components/Buttons.tsx");
 // Contains the controls for loading and saving
 class ActionBar extends React.Component {
     constructor(props) {
         super(props);
+    }
+    makeLoadTrigger(onClick) {
+        return React.createElement(Buttons_1.Button, { onClick: onClick, className: "btn-primary" },
+            React.createElement("img", { src: "./img/folder_open-24px.svg", alt: "Save" }),
+            "Load");
     }
     render() {
         return React.createElement("div", { className: "action-bar btn-toolbar", role: "toolbar" },
@@ -182,9 +188,7 @@ class ActionBar extends React.Component {
                 React.createElement(Modal_1.Modal, { submit: {
                         buttonName: "Load",
                         formName: "loadFile"
-                    }, buttonProps: {
-                        className: "btn-primary"
-                    }, triggerText: "Load", title: "Load" },
+                    }, trigger: this.makeLoadTrigger, title: "Load" },
                     React.createElement(FileLoader_1.FileLoader, { loadFile: this.props.loadData })),
                 React.createElement("button", { className: "btn btn-primary", onClick: this.props.save },
                     React.createElement("img", { src: "./img/save-24px.svg", alt: "Save" }),
@@ -1432,6 +1436,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 const Buttons_1 = __webpack_require__(/*! ./Buttons */ "./src/components/Buttons.tsx");
 let container = null; // Keep track of ModalContainer
+/*
+ * Container that holds whatever modal is active at the moment
+ *
+ * Note: Should be placed on top of everything else
+ */
 class ModalContainer extends React.Component {
     constructor(props) {
         super(props);
@@ -1459,7 +1468,7 @@ class Modal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'visible': ('visible' in this.props) ? this.props.visible : false
+            visible: ('visible' in this.props) ? this.props.visible : false
         };
         this.toggle = this.toggle.bind(this);
     }
@@ -1491,6 +1500,10 @@ class Modal extends React.Component {
         });
     }
     render() {
+        // Use custom prop function
+        if ('trigger' in this.props) {
+            return this.props.trigger(this.toggle);
+        }
         return React.createElement(Buttons_1.PrimaryButton, Object.assign({ onClick: this.toggle }, this.props.buttonProps), this.props.triggerText);
     }
 }
