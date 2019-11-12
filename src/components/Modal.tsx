@@ -10,6 +10,11 @@ import { Button, PrimaryButton } from "./Buttons";
 
 let container = null; // Keep track of ModalContainer
 
+/*
+ * Container that holds whatever modal is active at the moment
+ * 
+ * Note: Should be placed on top of everything else
+ */
 export class ModalContainer extends React.Component<{}, {currentModal: JSX.Element}> {
     constructor(props) {
         super(props);
@@ -46,12 +51,20 @@ interface ModalProps {
         buttonName: string;
         formName: string;
     };
+
+    // Contents of the modal
     children?: any;
+
+    // Modal title
     title: string;
+
+    // Trigger button
+    trigger?: (onClick: any) => any;
+
+    buttonProps?: any;
     triggerText?: string;
     visible?: boolean;
     hideTrigger?: boolean;
-    buttonProps?: any;
 }
 
 interface ModalState {
@@ -63,7 +76,7 @@ export class Modal extends React.Component<ModalProps, ModalState> {
         super(props);
 
         this.state = {
-            'visible': ('visible' in this.props) ? this.props.visible : false
+            visible: ('visible' in this.props) ? this.props.visible : false
         };
 
         this.toggle = this.toggle.bind(this);
@@ -116,6 +129,11 @@ export class Modal extends React.Component<ModalProps, ModalState> {
     }
 
     render() {
+        // Use custom prop function
+        if ('trigger' in this.props) {
+            return this.props.trigger(this.toggle);
+        }
+
         return <PrimaryButton onClick={this.toggle} {...this.props.buttonProps}>
             {this.props.triggerText}
         </PrimaryButton>;

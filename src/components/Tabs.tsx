@@ -53,6 +53,7 @@ export class Tabs extends React.Component<TabProps, { activeItem: string }> {
         return <ul className="nav nav-tabs card-header-tabs">
             {
                 this.props.items.map((i) => <TabItem
+                    key={i}
                     name={i}
                     activeItem={this.props.activeItem}
                     setActive={this.setActive}
