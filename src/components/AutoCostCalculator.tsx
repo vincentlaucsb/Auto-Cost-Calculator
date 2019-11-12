@@ -157,7 +157,9 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         };
 
         let MainDisplay = React.lazy(() => import("./MainDisplay"));
-        let saveControls = <div className="action-bar">
+        let saveControls = <div className="action-bar btn-toolbar"
+            role="toolbar">
+            <div className="btn-group mr-2" role="group">
             <button className="btn btn-primary"
                 onClick={this.undoChanges}>
                 <img src="./img/undo-24px.svg" alt="Save" />
@@ -183,12 +185,15 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
                 onClick={this.saveFile}
             >
                 <img src="./img/file_copy-24px.svg" alt="Save" />
-                Save to File</button>
+                    Save to File</button>
+            </div>
+            <div className="btn-group" role="group">
             <button className="btn btn-primary"
                 onClick={this.reset}
             >
                 <img src="./img/refresh-24px.svg" alt="Save" />
-                Restore Defaults</button>
+                    Restore Defaults</button>
+            </div>
         </div>
 
         return <React.Fragment>
