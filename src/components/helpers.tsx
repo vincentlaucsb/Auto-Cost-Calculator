@@ -12,3 +12,14 @@ export function money(dollars: number): string {
     // Given a number, format it with a dollar symbol
     return '$' + dollars.toFixed(2);
 }
+
+// Return a JSON representation of a JavaScript map
+export function jsonifyMap(data: Map<any, any>): object {
+    let mapData = {};
+
+    for (var [k, v] of data) {
+        mapData[k] = v;
+    }
+
+    return mapData;
+}

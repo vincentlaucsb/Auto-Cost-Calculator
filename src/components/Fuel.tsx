@@ -2,6 +2,8 @@
 import { Modal } from "./Modal";
 import { MinimizableCard } from "./MinimizableCard";
 import { DisabledButton, PrimaryButton } from "./Buttons";
+import { IJsonSerializable } from "./IJSONSerializable";
+import { jsonifyMap } from "./helpers";
 
 export enum FuelType {
     regular,
@@ -23,11 +25,31 @@ export function fuelString(type: FuelType) {
     }
 }
 
-export type FuelPrice = Map<FuelType, number>;
+export class FuelPrice implements IJsonSerializable {
+    constructor() {
+        this.data = new Map<FuelType, number>();
+    }
 
-interface GasPriceProps {
-    ppg: FuelPrice;   // change
-    updateGasPrice: any; // change
+    get(key: FuelType): number {
+        return this.data.get(key);
+    }
+
+    set(key: FuelType, value: number): this {
+        this.data.set(key, value);
+        return this;
+    }
+
+    data: Map<FuelType, number>;
+
+    load(data: object) {
+        for (let k in data) {
+            this.data.set(Number(k), data[k]);
+        }
+    }
+
+    dump(): object {
+        return jsonifyMap(this.data);
+    }
 }
 
 class GasPriceChangerColumn extends React.Component<
@@ -54,6 +76,11 @@ class GasPriceChangerColumn extends React.Component<
             </label>
         </div>
     }
+}
+
+interface GasPriceProps {
+    ppg: FuelPrice;
+    updateGasPrice: any; // change
 }
 
 interface GasPriceState {
@@ -97,12 +124,11 @@ export class GasPriceChanger extends React.Component<
         /* "Update" button pressed */
 
         // Pass updated prices back up to MpgCalculator
-        let newPpg: FuelPrice = new Map([
-            [FuelType.regular, parseFloat(this.state.temp_ppg.get(FuelType.regular))],
-            [FuelType.mid, parseFloat(this.state.temp_ppg.get(FuelType.mid))],
-            [FuelType.premium, parseFloat(this.state.temp_ppg.get(FuelType.premium))],
-            [FuelType.diesel, parseFloat(this.state.temp_ppg.get(FuelType.diesel))]
-        ]);
+        let newPpg = new FuelPrice();
+        newPpg.set(FuelType.regular, parseFloat(this.state.temp_ppg.get(FuelType.regular)));
+        newPpg.set(FuelType.mid, parseFloat(this.state.temp_ppg.get(FuelType.mid)));
+        newPpg.set(FuelType.premium, parseFloat(this.state.temp_ppg.get(FuelType.premium)));
+        newPpg.set(FuelType.diesel, parseFloat(this.state.temp_ppg.get(FuelType.diesel)));
 
         this.props.updateGasPrice(newPpg);
         event.preventDefault(); // Prevent submit from reloading page

@@ -6,6 +6,10 @@ $khaki: #c6ac8f;
 $umber: #5e503f;
 $white: darken(#ffffff, 10%);
 
+// React-vis
+@import "../../node_modules/react-vis/dist/main.scss";
+
+// More of my stuff
 body {
     background: $smoky-black;
     color: $white;
@@ -72,15 +76,9 @@ $active-panel-color: desaturate(lighten($gunmetal, 10%), 10%);
     }
 }
 
-// override c3.js styles
-// see: https://github.com/c3js/c3/issues/210
-#chart {
-    fill: $white;
-
-    // axes and ticks
-    path, line {
-        stroke: $white;
-    }
+.action-bar img {
+    filter: invert(0.15);
+    margin-right: 0.1em;
 }
 
 .modal {

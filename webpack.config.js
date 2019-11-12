@@ -1,8 +1,18 @@
 module.exports = {
+    mode: 'production',
+
     entry: "./src/index.tsx",
+
     output: {
         filename: "bundle.js",
+        chunkFilename: '[name].bundle.js',
         path: __dirname + "/dist"
+    },
+
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -28,7 +38,5 @@ module.exports = {
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
-        "react": "React",
-        "react-dom": "ReactDOM"
     }
 };

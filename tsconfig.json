@@ -1,17 +1,20 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist/",
-        "sourceMap": true,
-        "noImplicitAny": false,
-        "module": "commonjs",
-        "allowJs": true,
-      "experimentalDecorators": true,
-      "downlevelIteration": true,
-        "target": "es5",
-        "lib": ["es5", "es6", "dom"],
-        "types": ["prop-types", "react", "react-dom"],
-        "jsx": "react"
-    },
+  "compilerOptions": {
+      "baseUrl": ".",
+      "paths": { "*": ["types/*"] },
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "target": "es6",
+    "lib": [ "es5", "es6", "dom" ],
+    "types": [ "node", "prop-types", "react", "react-dom" ],
+    "jsx": "react"
+  },
     "include": [
         "./src/**/*",
     ]

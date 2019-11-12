@@ -1,11 +1,30 @@
 ﻿import { Car } from "./Car/Car";
+import { IJsonSerializable } from "./IJsonSerializable";
+import { jsonifyMap } from "./helpers";
 
 // Stores information of all cars in the app
-export class CarDatabase {
+export class CarDatabase implements IJsonSerializable {
+    load(data: object) {
+        // data is assumed to be a JSON array
+        for (let i in data) {
+            let tempCar = new Car();
+            tempCar.load(data[i]);
+            this.addCar(tempCar);
+        }
+    }
+
+    dump(): object {
+        let ret = [];
+        for (let car of this.data.values()) {
+            ret.push(car.dump());
+        }
+        return ret;
+    }
+
     data: Map<number, Car>;
 
     // The ID assigned to the next listing
-    nextId: number
+    nextId: number;
 
     constructor() {
         this.data = new Map<number, Car>();
