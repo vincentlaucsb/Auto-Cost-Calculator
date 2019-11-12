@@ -52,10 +52,11 @@ export class CarList extends React.Component<ListProps> {
                     overflowY: "scroll"
                 }}>
                 <ul className="list-group list-group-flush" >
-                    {this.props.data.toArray().map((i) => <CarListing
-                        data={i}
-                        updateCar={this.updateCar.bind(this, i.id)}
-                        removeCar={this.props.removeCar.bind(this, i.id)} />)}
+                        {this.props.data.toArray().map((i) => <CarListing
+                            key={i.id}
+                            data={i}
+                            updateCar={this.updateCar.bind(this, i.id)}
+                            removeCar={this.props.removeCar.bind(this, i.id)} />)}
                     </ul>
                 </div>
             </React.Fragment>

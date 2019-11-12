@@ -224,26 +224,89 @@ const react_grid_layout_1 = __webpack_require__(/*! react-grid-layout */ "./node
 const Fuel_1 = __webpack_require__(/*! ./Fuel */ "./src/components/Fuel.tsx");
 const CarDatabase_1 = __webpack_require__(/*! ./CarDatabase */ "./src/components/CarDatabase.tsx");
 const List_1 = __webpack_require__(/*! ./Car/List */ "./src/components/Car/List.tsx");
-const Globals_1 = __webpack_require__(/*! ./Globals */ "./src/components/Globals.tsx");
 const ActionBar_1 = __webpack_require__(/*! ./ActionBar */ "./src/components/ActionBar.tsx");
 const ResponsiveReactGridLayout = react_grid_layout_1.WidthProvider(react_grid_layout_1.Responsive);
 // Key of the localStorage entry that Auto Cost Calculator save data will be stored
 const LocalStorageKey = "autoCostData";
+const DefaultData = {
+    data: [
+        {
+            'name': '2018 Ford F-150',
+            'mpg': 23,
+            'price': 27705,
+            'fuelType': Fuel_1.FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Chevrolet Silverado 1500',
+            'mpg': 21,
+            'price': 28300,
+            'fuelType': Fuel_1.FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Ram 1500',
+            'mpg': 23,
+            'price': 27295,
+            'fuelType': Fuel_1.FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Toyota RAV4',
+            'mpg': 26,
+            'price': 24660,
+            'fuelType': Fuel_1.FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Nissan Rogue',
+            'mpg': 29,
+            'price': 24800,
+            'fuelType': Fuel_1.FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Toyota Camry',
+            'mpg': 34,
+            'price': 23645,
+            'fuelType': Fuel_1.FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        }
+    ],
+    ppg: {
+        0: 2.87,
+        1: 3.15,
+        2: 3.4,
+        3: 3.18 // Diesel
+    }
+};
 ;
 ;
 class AutoCostCalculator extends React.Component {
     constructor(props) {
         super(props);
-        let temp_modals_visible = new Map([
-            ['carAdder', false]
-        ]);
         this.state = {
             data: props.data,
             ppg: props.ppg,
-            modalsVisible: temp_modals_visible
+            modalsVisible: new Map([
+                ['carAdder', false]
+            ])
         };
-        this.dynamicComponents = {};
-        this.toJson = this.toJson.bind(this);
+        // Attempt to retrieve past session data
+        const savedData = localStorage.getItem(LocalStorageKey);
+        if (savedData != null) {
+            this.load(JSON.parse(savedData));
+        }
+        else {
+            this.state.ppg.load(DefaultData['ppg']);
+            this.state.data.load(DefaultData['data']);
+        }
         this.updateCar = this.updateCar.bind(this);
         this.updateGasPrice = this.updateGasPrice.bind(this);
         this.addCar = this.addCar.bind(this);
@@ -252,7 +315,8 @@ class AutoCostCalculator extends React.Component {
         this.undoChanges = this.undoChanges.bind(this);
         this.reset = this.reset.bind(this);
         this.save = this.save.bind(this);
-        this.loadData = this.loadData.bind(this);
+        this.load = this.load.bind(this);
+        this.dump = this.dump.bind(this);
         this.saveFile = this.saveFile.bind(this);
     }
     updateGasPrice(_ppg) {
@@ -283,19 +347,15 @@ class AutoCostCalculator extends React.Component {
     // Reset any changes made since the last save state
     undoChanges() {
         let jsonData = localStorage.getItem(LocalStorageKey);
-        this.loadData(JSON.parse(jsonData));
+        this.load(JSON.parse(jsonData));
     }
     // Restore original defaults
     reset() {
-        let defaults = new Globals_1.Defaults();
-        this.setState({
-            data: defaults.cars(),
-            ppg: defaults.ppg()
-        });
+        this.load(DefaultData);
         this.save();
     }
     // Load previously saved data stored in a JSON format
-    loadData(data) {
+    load(data) {
         let ppg = new Fuel_1.FuelPrice();
         ppg.load(data['ppg']);
         let cars = new CarDatabase_1.CarDatabase();
@@ -307,7 +367,7 @@ class AutoCostCalculator extends React.Component {
         this.save();
     }
     // Dump the current state in JSON format
-    toJson() {
+    dump() {
         let jsonData = {};
         jsonData['ppg'] = this.state.ppg.dump();
         jsonData['data'] = this.state.data.dump();
@@ -315,11 +375,11 @@ class AutoCostCalculator extends React.Component {
     }
     // Save the auto cost calculator's state to local storage
     save() {
-        localStorage.setItem(LocalStorageKey, JSON.stringify(this.toJson()));
+        localStorage.setItem(LocalStorageKey, JSON.stringify(this.dump()));
     }
     // Save data to an external file
     saveFile() {
-        var blob = new Blob([JSON.stringify(this.toJson())], {
+        var blob = new Blob([JSON.stringify(this.dump())], {
             type: "text/plain;charset=utf-8"
         });
         // TODO: Allow user to change filename
@@ -339,7 +399,7 @@ class AutoCostCalculator extends React.Component {
             React.createElement(Modal_1.ModalContainer, null),
             React.createElement("div", { className: "container-fluid" },
                 React.createElement("h1", null, "Automobile Cost Calculator"),
-                React.createElement(ActionBar_1.default, { loadData: this.loadData, undoChanges: this.undoChanges, reset: this.reset, save: this.save, saveFile: this.saveFile }),
+                React.createElement(ActionBar_1.default, { loadData: this.load, undoChanges: this.undoChanges, reset: this.reset, save: this.save, saveFile: this.saveFile }),
                 React.createElement(ResponsiveReactGridLayout, { className: "layout", layouts: layouts, breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }, cols: { lg: 30, md: 30, sm: 6, xs: 4, xxs: 2 }, rowHeight: 10, 
                     // Make Bootstrap card headers the handle for drap/drop
                     draggableHandle: "div.card-header" },
@@ -352,7 +412,11 @@ class AutoCostCalculator extends React.Component {
                         React.createElement(List_1.CarList, { data: this.state.data, addCar: this.addCar, updateCar: this.updateCar, removeAll: this.removeAll, removeCar: this.removeCar })))));
     }
 }
-exports.AutoCostCalculator = AutoCostCalculator;
+exports.default = AutoCostCalculator;
+AutoCostCalculator.defaultProps = {
+    data: new CarDatabase_1.CarDatabase(),
+    ppg: new Fuel_1.FuelPrice()
+};
 
 
 /***/ }),
@@ -796,7 +860,7 @@ class CarList extends React.Component {
                         overflowX: "hidden",
                         overflowY: "scroll"
                     } },
-                    React.createElement("ul", { className: "list-group list-group-flush" }, this.props.data.toArray().map((i) => React.createElement(CarListing_1.CarListing, { data: i, updateCar: this.updateCar.bind(this, i.id), removeCar: this.props.removeCar.bind(this, i.id) }))))));
+                    React.createElement("ul", { className: "list-group list-group-flush" }, this.props.data.toArray().map((i) => React.createElement(CarListing_1.CarListing, { key: i.id, data: i, updateCar: this.updateCar.bind(this, i.id), removeCar: this.props.removeCar.bind(this, i.id) }))))));
     }
 }
 exports.CarList = CarList;
@@ -1137,92 +1201,6 @@ exports.GasPriceChanger = GasPriceChanger;
 
 /***/ }),
 
-/***/ "./src/components/Globals.tsx":
-/*!************************************!*\
-  !*** ./src/components/Globals.tsx ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-// Default values for the Car Cost Calculator
-Object.defineProperty(exports, "__esModule", { value: true });
-const CarDatabase_1 = __webpack_require__(/*! ./CarDatabase */ "./src/components/CarDatabase.tsx");
-const Fuel_1 = __webpack_require__(/*! ./Fuel */ "./src/components/Fuel.tsx");
-const Car_1 = __webpack_require__(/*! ./Car/Car */ "./src/components/Car/Car.tsx");
-class Defaults {
-    cars() {
-        let cars = [
-            new Car_1.Car({
-                'name': '2018 Ford F-150',
-                'mpg': 23,
-                'price': 27705,
-                'fuelType': Fuel_1.FuelType.regular,
-                'insurance': 0,
-                'registration': 0
-            }),
-            new Car_1.Car({
-                'name': '2018 Chevrolet Silverado 1500',
-                'mpg': 21,
-                'price': 28300,
-                'fuelType': Fuel_1.FuelType.regular,
-                'insurance': 0,
-                'registration': 0
-            }),
-            new Car_1.Car({
-                'name': '2018 Ram 1500',
-                'mpg': 23,
-                'price': 27295,
-                'fuelType': Fuel_1.FuelType.regular,
-                'insurance': 0,
-                'registration': 0
-            }),
-            new Car_1.Car({
-                'name': '2018 Toyota RAV4',
-                'mpg': 26,
-                'price': 24660,
-                'fuelType': Fuel_1.FuelType.regular,
-                'insurance': 0,
-                'registration': 0
-            }),
-            new Car_1.Car({
-                'name': '2018 Nissan Rogue',
-                'mpg': 29,
-                'price': 24800,
-                'fuelType': Fuel_1.FuelType.regular,
-                'insurance': 0,
-                'registration': 0
-            }),
-            new Car_1.Car({
-                'name': '2018 Toyota Camry',
-                'mpg': 34,
-                'price': 23645,
-                'fuelType': Fuel_1.FuelType.regular,
-                'insurance': 0,
-                'registration': 0
-            }),
-        ];
-        let carDb = new CarDatabase_1.CarDatabase();
-        for (var i in cars) {
-            carDb.addCar(cars[i]);
-        }
-        return carDb;
-    }
-    ppg() {
-        var defaultPpg = new Fuel_1.FuelPrice();
-        defaultPpg.set(Fuel_1.FuelType.regular, 2.87);
-        defaultPpg.set(Fuel_1.FuelType.mid, 3.15);
-        defaultPpg.set(Fuel_1.FuelType.premium, 3.4);
-        defaultPpg.set(Fuel_1.FuelType.diesel, 3.18);
-        return defaultPpg;
-    }
-}
-exports.Defaults = Defaults;
-
-
-/***/ }),
-
 /***/ "./src/components/MainDisplay.tsx":
 /*!****************************************!*\
   !*** ./src/components/MainDisplay.tsx ***!
@@ -1549,7 +1527,7 @@ class Tabs extends React.Component {
         this.props.setActive(newTab);
     }
     render() {
-        return React.createElement("ul", { className: "nav nav-tabs card-header-tabs" }, this.props.items.map((i) => React.createElement(TabItem, { name: i, activeItem: this.props.activeItem, setActive: this.setActive })));
+        return React.createElement("ul", { className: "nav nav-tabs card-header-tabs" }, this.props.items.map((i) => React.createElement(TabItem, { key: i, name: i, activeItem: this.props.activeItem, setActive: this.setActive })));
     }
 }
 exports.Tabs = Tabs;
@@ -1941,19 +1919,8 @@ exports.jsonifyMap = jsonifyMap;
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 const ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-const Globals = __webpack_require__(/*! ./components/Globals */ "./src/components/Globals.tsx");
 const AutoCostCalculator_1 = __webpack_require__(/*! ./components/AutoCostCalculator */ "./src/components/AutoCostCalculator.tsx");
-let defaults = (new Globals.Defaults());
-let savedData = localStorage.getItem('autoCostData');
-let carDb = defaults.cars();
-let ppg = defaults.ppg();
-if (savedData != null) {
-    savedData = JSON.parse(savedData);
-    carDb.removeAll();
-    carDb.load(savedData['data']);
-    ppg.load(savedData['ppg']);
-}
-ReactDOM.render(React.createElement(AutoCostCalculator_1.AutoCostCalculator, { data: carDb, ppg: ppg }), document.getElementById('root'));
+ReactDOM.render(React.createElement(AutoCostCalculator_1.default, null), document.getElementById('root'));
 
 
 /***/ })

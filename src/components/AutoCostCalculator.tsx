@@ -3,18 +3,77 @@ import { saveAs } from 'file-saver';
 import { ModalContainer, Modal } from "./Modal";
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
-import { FuelPrice, GasPriceChanger } from "./Fuel";
+import { FuelPrice, GasPriceChanger, FuelType } from "./Fuel";
 
 import { CarDatabase } from "./CarDatabase";
 import { Car } from "./Car/Car";
 import { CarList as CarList } from "./Car/List";
-import { Defaults } from "./Globals";
 import ActionBar from "./ActionBar";
+import { IJsonSerializable } from "./IJsonSerializable";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 // Key of the localStorage entry that Auto Cost Calculator save data will be stored
 const LocalStorageKey = "autoCostData";
+
+const DefaultData = {
+    data: [
+        {
+            'name': '2018 Ford F-150',
+            'mpg': 23,
+            'price': 27705,
+            'fuelType': FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Chevrolet Silverado 1500',
+            'mpg': 21,
+            'price': 28300,
+            'fuelType': FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Ram 1500',
+            'mpg': 23,
+            'price': 27295,
+            'fuelType': FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Toyota RAV4',
+            'mpg': 26,
+            'price': 24660,
+            'fuelType': FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Nissan Rogue',
+            'mpg': 29,
+            'price': 24800,
+            'fuelType': FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        },
+        {
+            'name': '2018 Toyota Camry',
+            'mpg': 34,
+            'price': 23645,
+            'fuelType': FuelType.regular,
+            'insurance': 0,
+            'registration': 0
+        }],
+
+    ppg: {
+        0: 2.87, // Regular
+        1: 3.15, // Mid
+        2: 3.4,  // Premium
+        3: 3.18  // Diesel
+    }
+};
 
 interface AutoCostCalcProps {
     data: CarDatabase;
@@ -25,26 +84,37 @@ interface AutoCostCalcState extends AutoCostCalcProps{
     modalsVisible: Map<string, boolean>;
 };
 
-export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoCostCalcState> {
+export default class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoCostCalcState>
+    implements IJsonSerializable {
+
+    static defaultProps = {
+        data: new CarDatabase(),
+        ppg: new FuelPrice()
+    };
+
     dynamicComponents: object;
     modalRef: any;
 
     constructor(props: AutoCostCalcProps) {
         super(props);
 
-        let temp_modals_visible: Map<string, boolean> = new Map([
-            ['carAdder', false]
-        ]);
-        
         this.state = {
             data: props.data,
             ppg: props.ppg,
-            modalsVisible: temp_modals_visible
+            modalsVisible: new Map([
+                ['carAdder', false]
+            ])
         };
 
-        this.dynamicComponents = {};
+        // Attempt to retrieve past session data
+        const savedData = localStorage.getItem(LocalStorageKey);
+        if (savedData != null) {
+            this.load(JSON.parse(savedData));
+        } else {
+            this.state.ppg.load(DefaultData['ppg']);
+            this.state.data.load(DefaultData['data']);
+        }
 
-        this.toJson = this.toJson.bind(this);
         this.updateCar = this.updateCar.bind(this);
         this.updateGasPrice = this.updateGasPrice.bind(this);
         this.addCar = this.addCar.bind(this);
@@ -53,7 +123,8 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         this.undoChanges = this.undoChanges.bind(this);
         this.reset = this.reset.bind(this);
         this.save = this.save.bind(this);
-        this.loadData = this.loadData.bind(this);
+        this.load = this.load.bind(this);
+        this.dump = this.dump.bind(this);
         this.saveFile = this.saveFile.bind(this);
     }
     
@@ -90,23 +161,17 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
     // Reset any changes made since the last save state
     undoChanges() {
         let jsonData = localStorage.getItem(LocalStorageKey);
-        this.loadData(JSON.parse(jsonData));
+        this.load(JSON.parse(jsonData));
     }
 
     // Restore original defaults
     reset() {
-        let defaults = new Defaults();
-
-        this.setState({
-            data: defaults.cars(),
-            ppg: defaults.ppg()
-        });
-
+        this.load(DefaultData);
         this.save();
     }
 
     // Load previously saved data stored in a JSON format
-    loadData(data: object) {
+    load(data: object) {
         let ppg = new FuelPrice();
         ppg.load(data['ppg']);
 
@@ -122,7 +187,7 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
     }
 
     // Dump the current state in JSON format
-    toJson(): object {
+    dump(): object {
         let jsonData = {};
         jsonData['ppg'] = this.state.ppg.dump();
         jsonData['data'] = this.state.data.dump();
@@ -131,12 +196,12 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
 
     // Save the auto cost calculator's state to local storage
     save() {
-        localStorage.setItem(LocalStorageKey, JSON.stringify(this.toJson()));
+        localStorage.setItem(LocalStorageKey, JSON.stringify(this.dump()));
     }
 
     // Save data to an external file
     saveFile() {
-        var blob = new Blob([JSON.stringify(this.toJson())],
+        var blob = new Blob([JSON.stringify(this.dump())],
             {
                 type: "text/plain;charset=utf-8"
             }
@@ -164,7 +229,7 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
                 <h1>Automobile Cost Calculator</h1>
 
                 <ActionBar
-                    loadData={this.loadData}
+                    loadData={this.load}
                     undoChanges={this.undoChanges}
                     reset={this.reset}
                     save={this.save}
