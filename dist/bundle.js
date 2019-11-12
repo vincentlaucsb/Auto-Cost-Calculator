@@ -155,6 +155,54 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/components/ActionBar.tsx":
+/*!**************************************!*\
+  !*** ./src/components/ActionBar.tsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+const FileLoader_1 = __webpack_require__(/*! ./FileLoader */ "./src/components/FileLoader.tsx");
+const Modal_1 = __webpack_require__(/*! ./Modal */ "./src/components/Modal.tsx");
+// Contains the controls for loading and saving
+class ActionBar extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return React.createElement("div", { className: "action-bar btn-toolbar", role: "toolbar" },
+            React.createElement("div", { className: "btn-group mr-2", role: "group" },
+                React.createElement("button", { className: "btn btn-primary", onClick: this.props.undoChanges },
+                    React.createElement("img", { src: "./img/undo-24px.svg", alt: "Save" }),
+                    "Undo Changes"),
+                React.createElement(Modal_1.Modal, { submit: {
+                        buttonName: "Load",
+                        formName: "loadFile"
+                    }, buttonProps: {
+                        className: "btn-primary"
+                    }, triggerText: "Load", title: "Load" },
+                    React.createElement(FileLoader_1.FileLoader, { loadFile: this.props.loadData })),
+                React.createElement("button", { className: "btn btn-primary", onClick: this.props.save },
+                    React.createElement("img", { src: "./img/save-24px.svg", alt: "Save" }),
+                    " Save"),
+                React.createElement("button", { className: "btn btn-primary", onClick: this.props.saveFile },
+                    React.createElement("img", { src: "./img/file_copy-24px.svg", alt: "Save" }),
+                    "Save to File")),
+            React.createElement("div", { className: "btn-group", role: "group" },
+                React.createElement("button", { className: "btn btn-primary", onClick: this.props.reset },
+                    React.createElement("img", { src: "./img/refresh-24px.svg", alt: "Save" }),
+                    "Restore Defaults")));
+    }
+}
+exports.default = ActionBar;
+
+
+/***/ }),
+
 /***/ "./src/components/AutoCostCalculator.tsx":
 /*!***********************************************!*\
   !*** ./src/components/AutoCostCalculator.tsx ***!
@@ -173,7 +221,7 @@ const Fuel_1 = __webpack_require__(/*! ./Fuel */ "./src/components/Fuel.tsx");
 const CarDatabase_1 = __webpack_require__(/*! ./CarDatabase */ "./src/components/CarDatabase.tsx");
 const List_1 = __webpack_require__(/*! ./Car/List */ "./src/components/Car/List.tsx");
 const Globals_1 = __webpack_require__(/*! ./Globals */ "./src/components/Globals.tsx");
-const FileLoader_1 = __webpack_require__(/*! ./FileLoader */ "./src/components/FileLoader.tsx");
+const ActionBar_1 = __webpack_require__(/*! ./ActionBar */ "./src/components/ActionBar.tsx");
 const ResponsiveReactGridLayout = react_grid_layout_1.WidthProvider(react_grid_layout_1.Responsive);
 // Key of the localStorage entry that Auto Cost Calculator save data will be stored
 const LocalStorageKey = "autoCostData";
@@ -283,33 +331,11 @@ class AutoCostCalculator extends React.Component {
             ]
         };
         let MainDisplay = React.lazy(() => Promise.resolve().then(() => __webpack_require__(/*! ./MainDisplay */ "./src/components/MainDisplay.tsx")));
-        let saveControls = React.createElement("div", { className: "action-bar btn-toolbar", role: "toolbar" },
-            React.createElement("div", { className: "btn-group mr-2", role: "group" },
-                React.createElement("button", { className: "btn btn-primary", onClick: this.undoChanges },
-                    React.createElement("img", { src: "./img/undo-24px.svg", alt: "Save" }),
-                    "Undo Changes"),
-                React.createElement(Modal_1.Modal, { submit: {
-                        buttonName: "Load",
-                        formName: "loadFile"
-                    }, buttonProps: {
-                        className: "btn-primary"
-                    }, triggerText: "Load", title: "Load" },
-                    React.createElement(FileLoader_1.FileLoader, { loadFile: this.loadData })),
-                React.createElement("button", { className: "btn btn-primary", onClick: this.save },
-                    React.createElement("img", { src: "./img/save-24px.svg", alt: "Save" }),
-                    " Save"),
-                React.createElement("button", { className: "btn btn-primary", onClick: this.saveFile },
-                    React.createElement("img", { src: "./img/file_copy-24px.svg", alt: "Save" }),
-                    "Save to File")),
-            React.createElement("div", { className: "btn-group", role: "group" },
-                React.createElement("button", { className: "btn btn-primary", onClick: this.reset },
-                    React.createElement("img", { src: "./img/refresh-24px.svg", alt: "Save" }),
-                    "Restore Defaults")));
         return React.createElement(React.Fragment, null,
             React.createElement(Modal_1.ModalContainer, null),
             React.createElement("div", { className: "container-fluid" },
                 React.createElement("h1", null, "Automobile Cost Calculator"),
-                saveControls,
+                React.createElement(ActionBar_1.default, { loadData: this.loadData, undoChanges: this.undoChanges, reset: this.reset, save: this.save, saveFile: this.saveFile }),
                 React.createElement(ResponsiveReactGridLayout, { className: "layout", layouts: layouts, breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }, cols: { lg: 30, md: 30, sm: 6, xs: 4, xxs: 2 }, rowHeight: 10, 
                     // Make Bootstrap card headers the handle for drap/drop
                     draggableHandle: "div.card-header" },

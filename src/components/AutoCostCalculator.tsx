@@ -9,7 +9,7 @@ import { CarDatabase } from "./CarDatabase";
 import { Car } from "./Car/Car";
 import { CarList as CarList } from "./Car/List";
 import { Defaults } from "./Globals";
-import { FileLoader } from "./FileLoader";
+import ActionBar from "./ActionBar";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -157,51 +157,19 @@ export class AutoCostCalculator extends React.Component<AutoCostCalcProps, AutoC
         };
 
         let MainDisplay = React.lazy(() => import("./MainDisplay"));
-        let saveControls = <div className="action-bar btn-toolbar"
-            role="toolbar">
-            <div className="btn-group mr-2" role="group">
-            <button className="btn btn-primary"
-                onClick={this.undoChanges}>
-                <img src="./img/undo-24px.svg" alt="Save" />
-                Undo Changes
-            </button>
-            <Modal submit={{
-                buttonName: "Load",
-                formName: "loadFile"
-            }}
-
-                buttonProps={{
-                    className: "btn-primary"
-                }}
-
-                triggerText="Load" title="Load">
-                <FileLoader loadFile={this.loadData} />
-            </Modal>
-            <button
-                className="btn btn-primary"
-                onClick={this.save}>
-                <img src="./img/save-24px.svg" alt="Save" /> Save</button>
-            <button className="btn btn-primary"
-                onClick={this.saveFile}
-            >
-                <img src="./img/file_copy-24px.svg" alt="Save" />
-                    Save to File</button>
-            </div>
-            <div className="btn-group" role="group">
-            <button className="btn btn-primary"
-                onClick={this.reset}
-            >
-                <img src="./img/refresh-24px.svg" alt="Save" />
-                    Restore Defaults</button>
-            </div>
-        </div>
 
         return <React.Fragment>
             <ModalContainer />
             <div className="container-fluid">
                 <h1>Automobile Cost Calculator</h1>
 
-                {saveControls}
+                <ActionBar
+                    loadData={this.loadData}
+                    undoChanges={this.undoChanges}
+                    reset={this.reset}
+                    save={this.save}
+                    saveFile={this.saveFile}
+                />
 
                 <ResponsiveReactGridLayout className="layout" layouts={layouts}
                     breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
