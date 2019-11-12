@@ -20,7 +20,7 @@ export default class MainDisplay extends React.Component<MainDisplayProps, MainD
         super(props);
 
         this.state = {
-            activeTab: "Chart",
+            activeTab: "Cost Over Time",
             months: 48,
             annualMileage: 12000
         };
@@ -45,6 +45,36 @@ export default class MainDisplay extends React.Component<MainDisplayProps, MainD
                 <Graph
                     data={this.makeGraphData()}
                 />
+                <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignContent: 'space-around',
+                    flexDirection: 'row'
+                }}>
+                    <div style={{ width: '72.5%' }}>
+                        <MileageChanger mileage={this.state.annualMileage} updateMileage={this.updateMileage} />
+                    </div>
+                    <div style={{ width: '22.5%' }}>
+                        <MonthChanger months={this.state.months} updateMonths={this.updateMonths} />
+                    </div>
+                </div>
+            </React.Suspense>
+        </div>;
+    }
+
+    getCostPerMonth() {
+        const BarGraph = React.lazy(() => import("./charts/BarGraph"));
+        const MileageChanger = React.lazy(() => import("./charts/MileageChanger"));
+        const MonthChanger = React.lazy(() => import("./charts/MonthChanger"));
+
+        return <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column'
+        }}>
+            <React.Suspense fallback={<div>Loading...</div>}>
+                <BarGraph />
                 <div style={{
                     width: '100%',
                     display: 'flex',
@@ -107,14 +137,22 @@ export default class MainDisplay extends React.Component<MainDisplayProps, MainD
 
     render() {
         const tabItems: Array<string> = [
-            "Chart", "Table"
+            "Cost Over Time",
+            // "Cost Per Month",
+            "Table"
         ];
 
         let body;
 
-        if (this.state.activeTab == "Chart") {
+        if (this.state.activeTab == "Cost Over Time") {
             body = this.getChart();
-        } else {
+        }
+        /*
+        else if (this.state.activeTab == "Cost Per Month") {
+            body = this.getCostPerMonth();
+        }
+        */
+        else {
             body = <Table
                 annualMileage={this.state.annualMileage}
                 months={this.state.months}

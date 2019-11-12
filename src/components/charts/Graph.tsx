@@ -6,17 +6,7 @@ interface GraphProps {
 }
 
 export default class Graph extends React.Component<GraphProps> {
-    FlexibleXYPlot: any;
-    XAxis: any;
-    YAxis: any;
-    DiscreteColorLegend: any;
-    HorizontalGridLines: any;
-    LineSeries: any;
-
     render() {
-        let series = Array.from(this.props.data.entries());
-        let keys = Array.from(this.props.data.keys());
-
         let lineData = [];
         for (let [car, data] of this.props.data.entries()) {
             lineData.push({
@@ -24,8 +14,6 @@ export default class Graph extends React.Component<GraphProps> {
                 data: data
             });
         }
-
-        console.log(lineData);
 
         return <ResponsiveLine
             data={lineData}
@@ -43,8 +31,16 @@ export default class Graph extends React.Component<GraphProps> {
             axisLeft={{
                 legend: "Cost"
             }}
+
+            curve="linear"
             xScale={{ type: 'linear' }}
-            yScale={{ type: 'linear' }}
+            yScale={{
+                type: 'linear',
+                stacked: true
+            }}
+
+            enableSlices="x"
+
             legends={[
                 {
                     anchor: 'bottom-right',
