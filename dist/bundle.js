@@ -175,6 +175,8 @@ const List_1 = __webpack_require__(/*! ./Car/List */ "./src/components/Car/List.
 const Globals_1 = __webpack_require__(/*! ./Globals */ "./src/components/Globals.tsx");
 const FileLoader_1 = __webpack_require__(/*! ./FileLoader */ "./src/components/FileLoader.tsx");
 const ResponsiveReactGridLayout = react_grid_layout_1.WidthProvider(react_grid_layout_1.Responsive);
+// Key of the localStorage entry that Auto Cost Calculator save data will be stored
+const LocalStorageKey = "autoCostData";
 ;
 ;
 class AutoCostCalculator extends React.Component {
@@ -189,6 +191,7 @@ class AutoCostCalculator extends React.Component {
             modalsVisible: temp_modals_visible
         };
         this.dynamicComponents = {};
+        this.toJson = this.toJson.bind(this);
         this.updateCar = this.updateCar.bind(this);
         this.updateGasPrice = this.updateGasPrice.bind(this);
         this.addCar = this.addCar.bind(this);
@@ -227,7 +230,7 @@ class AutoCostCalculator extends React.Component {
     }
     // Reset any changes made since the last save state
     undoChanges() {
-        let jsonData = localStorage.getItem('autoCostData');
+        let jsonData = localStorage.getItem(LocalStorageKey);
         this.loadData(JSON.parse(jsonData));
     }
     // Restore original defaults
@@ -238,13 +241,6 @@ class AutoCostCalculator extends React.Component {
             ppg: defaults.ppg()
         });
         this.save();
-    }
-    // Save the auto cost calculator's state to local storage
-    save() {
-        let jsonData = {};
-        jsonData['ppg'] = this.state.ppg.dump();
-        jsonData['data'] = this.state.data.dump();
-        localStorage.setItem('autoCostData', JSON.stringify(jsonData));
     }
     // Load previously saved data stored in a JSON format
     loadData(data) {
@@ -258,13 +254,23 @@ class AutoCostCalculator extends React.Component {
         });
         this.save();
     }
-    saveFile() {
+    // Dump the current state in JSON format
+    toJson() {
         let jsonData = {};
         jsonData['ppg'] = this.state.ppg.dump();
         jsonData['data'] = this.state.data.dump();
-        var blob = new Blob([JSON.stringify(jsonData)], {
+        return jsonData;
+    }
+    // Save the auto cost calculator's state to local storage
+    save() {
+        localStorage.setItem(LocalStorageKey, JSON.stringify(this.toJson()));
+    }
+    // Save data to an external file
+    saveFile() {
+        var blob = new Blob([JSON.stringify(this.toJson())], {
             type: "text/plain;charset=utf-8"
         });
+        // TODO: Allow user to change filename
         file_saver_1.saveAs(blob, "auto-cost-data.json");
     }
     render() {
