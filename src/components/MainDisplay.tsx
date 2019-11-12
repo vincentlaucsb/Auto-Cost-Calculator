@@ -123,7 +123,7 @@ export default class MainDisplay extends React.Component<MainDisplayProps, MainD
             />; 
         }
 
-        return <div className="card" id="graph-panel" style={{ height: "100%" }}>
+        return <div className="card" id="graph-panel" style={{ width: "100%", height: "100%" }}>
             <div className="card-header">
                 <Tabs items={tabItems}
                     activeItem={this.state.activeTab}
